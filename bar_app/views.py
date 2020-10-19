@@ -5,20 +5,12 @@ import bcrypt
 
 
 
-def index(request):
-    if 'user_id' in request.session:
-        return redirect('/welcome')
-    context = {
-        "all_users": User.objects.all(),
-    }
-    return render(request, 'index.html',context)
-
 def register(request):
     errs = User.objects.user_validator(request.POST)
     if len(errs) > 0:
         for msg in errs.values():
             messages.error(request, msg)
-        return redirect('/')
+        return redirect('/bar')
     password = request.POST ['password']
     hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
     user = User.objects.create(
@@ -28,7 +20,7 @@ def register(request):
         password = hashed
     )
     request.session['user_id'] = user.id
-    return redirect ('/welcome')
+    return redirect ('/dashboard')
 
 
 def login(request):
@@ -37,24 +29,23 @@ def login(request):
     if len(errs) > 0:
         for msg in errs.values():
             messages.error(request, msg)
-        return redirect('/')
+        return redirect('/bar')
     email_users = User.objects.filter(email = request.POST['email'])
     our_user = email_users[0]
     if bcrypt.checkpw(request.POST['password'].encode(), our_user.password.encode()):
         request.session['user_id'] = our_user.id
-        return redirect ('/')
+        return redirect ('/bar')
     messages.error(request, 'Password doesnt match whats on file! Try again!')
-    return redirect('/welcome')
+    return redirect('/bar/dashboard')
 
 def logout(request):
     request.session.clear()
-    return redirect ('/')
+    return redirect ('/bar')
 
 def welcome(request):
     if 'user_id' not in request.session:
-        return redirect ('/')
+        return redirect ('/bar')
     context = {
-        'logged_in_user': User.objects.get(id = request.session['user_id']),
-        'all_users': User.objects.all(),
+        'bartender': Employee.objects.get(id = request.session['user_id']),
     }
     return render (request, 'welcome.html',context)

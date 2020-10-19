@@ -1,4 +1,5 @@
 from django.db import models
+from patron_app.models import User
 
 
 class Bar(models.Model):
@@ -12,7 +13,7 @@ class Bar(models.Model):
 
 class Drink(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField
+    description = models.TextField()
     cost = models.IntegerField()
     bar = models.ForeignKey(Bar, related_name='drinks', on_delete= models.CASCADE)
     created_at = models.DateTimeField(auto_now_add = True)
@@ -20,7 +21,6 @@ class Drink(models.Model):
 
 class Employee(models.Model):
     name = models.CharField(max_length=255)     
-    employee_id = models.IntegerField()
     is_manager = models.BooleanField(null=True)
     password = models.CharField(max_length=255)
     bar = models.ForeignKey(Bar, related_name='bartenders', on_delete=models.CASCADE)
@@ -32,8 +32,9 @@ class Employee(models.Model):
 class Tab(models.Model):
     patron = models.ForeignKey(User, related_name='tabs', on_delete=models.CASCADE)
     drinks = models.ManyToManyField(Drink, related_name='patron_tabs')
+    bartender = models. ForeignKey(Employee, related_name="open_tabs", on_delete=models.CASCADE)
     payment_reference = models.CharField(max_length=500, null=True)
-    total=models.IntegerField(null=True)
+    total = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     #Took out "Tab Num" - can be interchangable with ID

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bartender Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>{{bartender.name}}</h1>
+        <div class="navigation">
+            <a href="">Switch Bartenders</a> | <a href="">Schedule</a> | <a href="">Cashout</a>
+            {%if bartender.is_manager%}
+            | <a href="">Some Manager Only Link</a>
+            {%endif%}
+        </div>
+    </header>
+    <div class="example">
+        <h3>24 - Patron Name</h3>
+        <ul>
+            <li>Whiskey - $3.00</li>
+        </ul>
+    </div>
+    {%for tab in bartender.open_tabs%}
+    <div class="table">
+        <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
+        <ul>
+        {%for drink in tab.drinks.all%}
+            <li>{{drink.name}} - {{drink.cost}} {%if bartender.is_manager%} <a href="">Delete</a></li>
+       </ul>
+       <p>Total = {{tab.total}}</p>
+    </div>
+</body>
+</html>
