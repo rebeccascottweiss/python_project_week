@@ -26,9 +26,12 @@
         <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
         <ul>
         {%for drink in tab.drinks.all%}
-            <li>{{drink.name}} - {{drink.cost}} {%if bartender.is_manager%} <a href="">Delete</a></li>
-       </ul>
-       <p>Total = {{tab.total}}</p>
+            <li>{{drink.name}} - {{drink.cost}} {%if bartender.is_manager%} <a href="">Delete</a></li>{%endif%}
+        {%endfor%}
+        </ul>
+        <p>Total = {{tab.total}}</p>
+        <a href="{{tab.id}}/close_out" class="button">Close Out</a>
     </div>
+    {%endfor%}
 </body>
 </html>

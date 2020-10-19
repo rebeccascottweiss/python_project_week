@@ -6,4 +6,5 @@ urlpatterns = [
     path('register', views.register),
     path('login', views.login),
     path('dashboard',views.dashboard),
+    path('<tab_id>/close_out', views.close_out),
 ]
