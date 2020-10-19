@@ -1,5 +1,6 @@
 from django.db import models
 import re
+from patron_app.models import User
 
 
 class EmployeeManager(models.Manager):

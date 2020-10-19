@@ -50,7 +50,7 @@ def logout(request):
     request.session.clear()
     return redirect ('/bar')
 
-def welcome(request):
+def dashboard(request):
     if 'employee_id' not in request.session:
         return redirect ('/bar')
     context = {
