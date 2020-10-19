@@ -50,10 +50,17 @@ def logout(request):
     request.session.clear()
     return redirect ('/bar')
 
-def welcome(request):
+
+def dashboard(request):
+
     if 'employee_id' not in request.session:
         return redirect ('/bar')
     context = {
         'bartender': Employee.objects.get(id = request.session['employee_id']),
     }
     return render (request, 'dashboard.html', context)
+
+def close_out(request, tab_id):
+    #payment methodology goes here somewhere. Should there be a rendered html with ways to close out? 
+    return redirect('/bar/dashboard')
+
