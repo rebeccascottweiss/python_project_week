@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from datetime import date
 import re
 # Create your models here.
 class Validation(models.Manager):
@@ -8,18 +8,18 @@ class Validation(models.Manager):
         Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         Name_REGEX = re.compile(r'^[a-zA-Z]+$')
         Password_REGEX = re.compile(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.;:<>?/~_+-=\|])')
-        #check to make sure name is longer than 2 chars
+        # check to make sure name is longer than 2 chars
         if len(postData['first_name']) < 2:
             errors['first_name'] = "Your first name must be longer than 2 letters."
         if len(postData['last_name']) < 2:
             errors['last_name'] = "Your last name must be longer than 2 letters."
-        #add in check to make sure all letters
+        # add in check to make sure all letters
         if not Name_REGEX.match(postData['f_name']) or not Name_REGEX.match(postData['last_name']):
             errors['first_name_alph'] = "Your name must only contain letters."
-        #check if email is valid email format
+        # check if email is valid email format
         if not Email_REGEX.match(postData['email_address']):
             errors['email_address'] = "You must enter a valid email address."
-        #check to see if someone already has this email
+        # check to see if someone already has this email
         for user in User.objects.all():
             if user.email == postData['email']:
                 errors['dup_email'] = "That email is already registered. Try logging in."
@@ -29,7 +29,7 @@ class Validation(models.Manager):
             errors['pw_chars'] = "Your password must contain: one lowercase letter, one uppercase letter, one number and one special character."
         if postData['password'] != postData['confirm_pw']:
             errors['match_pw'] = "Your passwords must match!"
-        #leaving this here to help with age greater than 21 validation
+        # leaving this here to help with age greater than 21 validation
         # if datetime.strptime(postData['b_day'], '%Y-%m-%d') > datetime.now():
         #     errors['b_day'] = "Your birthday must be in the past."
         return errors
@@ -51,3 +51,4 @@ class User(models.Model):
     password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = Validation()
