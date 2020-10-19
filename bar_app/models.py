@@ -58,4 +58,3 @@ class Tab(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     #Took out "Tab Num" - can be interchangable with ID
-    
