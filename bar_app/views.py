@@ -14,7 +14,7 @@ def index(request):
     return render(request, 'index.html',context)
 
 def register(request):
-    errs = User.objects.user_validator(request.POST)
+    errs = Employee.objects.user_validator(request.POST)
     if len(errs) > 0:
         for msg in errs.values():
             messages.error(request, msg)
@@ -32,7 +32,7 @@ def register(request):
 
 def login(request):
     print(request.POST['name'])
-    errs = User.objects.login_validator(request.POST)
+    errs = Employee.objects.login_validator(request.POST)
     if len(errs) > 0:
         for msg in errs.values():
             messages.error(request, msg)
@@ -50,7 +50,9 @@ def logout(request):
     request.session.clear()
     return redirect ('/bar')
 
+
 def dashboard(request):
+
     if 'employee_id' not in request.session:
         return redirect ('/bar')
     context = {
@@ -61,3 +63,4 @@ def dashboard(request):
 def close_out(request, tab_id):
     #payment methodology goes here somewhere. Should there be a rendered html with ways to close out? 
     return redirect('/bar/dashboard')
+

@@ -5,7 +5,7 @@ import re
 
 class Payment(models.Model):
     payment_type = models.CharField(max_length=255) #CC or paypal
-    vendor_id = models.CharField(max_length=255) #identification with 3rd party processor
+    vendor_token = models.CharField(max_length=255) #identification with 3rd party processor
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -18,7 +18,7 @@ class Identification(models.Model):
     exp = models.Date()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
 class Validation(models.Manager):
     def validate_register(self, postData):
         errors = {}
@@ -63,7 +63,7 @@ class Validation(models.Manager):
 class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    age = models.IntegerField()
+    valid_to_drink = models.BooleanField()
     email_address = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     identification = models.ForeignKey(Identification, related_name="users", on_delete=models.CASCADE)
