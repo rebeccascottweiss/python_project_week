@@ -1,15 +1,15 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
-from .models import User
+from .models import User, Bar, Drink, Tab
 import bcrypt
 
 
 
 def index(request):
-    if 'user_id' in request.session:
-        return redirect('/welcome')
+    if 'employee_id' in request.session:
+        return redirect('/dashboard')
     context = {
-        "all_users": User.objects.all(),
+        "all_employees": Employee.objects.all(),
     }
     return render(request, 'index.html',context)
 
@@ -22,39 +22,38 @@ def register(request):
     password = request.POST ['password']
     hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
     user = User.objects.create(
-        first_name = request.POST['first_name'],
-        last_name = request.POST['last_name'],
-        email = request.POST['email'],
+        name = request.POST['name'],
+        is_manager = request.POST['is_manager'],
         password = hashed
     )
-    request.session['user_id'] = user.id
-    return redirect ('/welcome')
+    request.session['employee_id'] = employee.id
+    return redirect ('/dashboard')
 
 
 def login(request):
-    print(request.POST['email'])
+    print(request.POST['name'])
     errs = User.objects.login_validator(request.POST)
     if len(errs) > 0:
         for msg in errs.values():
             messages.error(request, msg)
         return redirect('/')
-    email_users = User.objects.filter(email = request.POST['email'])
-    our_user = email_users[0]
+    employee_users = Employee.objects.filter(name = request.POST['name'])
+    our_employee = employee_users[0]
     if bcrypt.checkpw(request.POST['password'].encode(), our_user.password.encode()):
-        request.session['user_id'] = our_user.id
+        request.session['employee_id'] = our_employee.id
         return redirect ('/')
     messages.error(request, 'Password doesnt match whats on file! Try again!')
-    return redirect('/welcome')
+    return redirect('/dashboard')
 
 def logout(request):
     request.session.clear()
     return redirect ('/')
 
 def welcome(request):
-    if 'user_id' not in request.session:
+    if 'employee_id' not in request.session:
         return redirect ('/')
     context = {
-        'logged_in_user': User.objects.get(id = request.session['user_id']),
-        'all_users': User.objects.all(),
+        'logged_in_employee': Employee.objects.get(id = request.session['employee_id']),
+        "all_employees": Employee.objects.all(),
     }
-    return render (request, 'welcome.html',context)
+    return render (request, 'dashboard.html', context)
