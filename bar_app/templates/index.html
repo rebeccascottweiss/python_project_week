@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay My Tab</title>
+</head>
+<body>
+    <h1>Employee Clock in and Registration</h1>
+
+    <h1>Registration!</h1>
+    <form action="/register" method = "POST">
+        {% csrf_token %}
+    
+        <label for="name">Employee Name:</label>
+        <input type="text" name="name" id="name">
+        <br>
+        <label for="level">Employee Level:</label>    
+        <select name="is_manager" id="is_manager">
+            <option value="TRUE">Bartender</option>
+            <option value="FALSE">Manager</option>
+        </select><br>
+        <label for="password">Password:</label>    
+        <input type="password" name="password" id="password">
+        <br>
+        <label for="confirm_password">Confirm Password:</label>    
+        <input type="password" name="confirm_password" id="confirm_password">
+        <br>
+        <input type="submit" value="Register">
+    </form>
+
+    <h1>Login!</h1>
+    <form action="/login" method = "POST">
+        {% csrf_token %}
+        <label for="name">Employee Name:</label>
+        <input type="text" name="name" id="name">
+        <label for="employee_id">Employee ID:</label>    
+        <input type="number" name="employee_id" id="employee_id">
+        <br>
+        <label for="password">Password:</label>    
+        <input type="password" name="password" id="password">
+        <br> 
+        <input type="submit" value="Login">
+    </form>
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{message}}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
