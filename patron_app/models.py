@@ -1,5 +1,6 @@
 from django.db import models
-
+from datetime import datetime
+import re
 # Create your models here.
 
 class Payment(models.Model):
@@ -17,6 +18,47 @@ class Identification(models.Model):
     exp = models.Date()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+class Validation(models.Manager):
+    def validate_register(self, postData):
+        errors = {}
+        Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+        Name_REGEX = re.compile(r'^[a-zA-Z]+$')
+        Password_REGEX = re.compile(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.;:<>?/~_+-=\|])')
+        #check to make sure name is longer than 2 chars
+        if len(postData['first_name']) < 2:
+            errors['first_name'] = "Your first name must be longer than 2 letters."
+        if len(postData['last_name']) < 2:
+            errors['last_name'] = "Your last name must be longer than 2 letters."
+        #add in check to make sure all letters
+        if not Name_REGEX.match(postData['f_name']) or not Name_REGEX.match(postData['last_name']):
+            errors['first_name_alph'] = "Your name must only contain letters."
+        #check if email is valid email format
+        if not Email_REGEX.match(postData['email_address']):
+            errors['email_address'] = "You must enter a valid email address."
+        #check to see if someone already has this email
+        for user in User.objects.all():
+            if user.email == postData['email']:
+                errors['dup_email'] = "That email is already registered. Try logging in."
+        if len(postData['password']) < 8:
+            errors['password'] = "Your password must be 8 or more characters."
+        if not Password_REGEX.match(postData['password']):
+            errors['pw_chars'] = "Your password must contain: one lowercase letter, one uppercase letter, one number and one special character."
+        if postData['password'] != postData['confirm_pw']:
+            errors['match_pw'] = "Your passwords must match!"
+        #leaving this here to help with age greater than 21 validation
+        # if datetime.strptime(postData['b_day'], '%Y-%m-%d') > datetime.now():
+        #     errors['b_day'] = "Your birthday must be in the past."
+        return errors
+    def validate_login(self, postData):
+        user = User.objects.filter(email=postData['user_email'])
+        Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+        errors = {}
+        if len(postData['user_password']) < 8:
+            errors['password'] = "Your password must be 8 or more characters."
+        if not Email_REGEX.match(postData['user_email']):
+            errors['email'] = "You must enter a valid email address."
+        return errors
 
 class User(models.Model):
     first_name = models.CharField(max_length=255)
