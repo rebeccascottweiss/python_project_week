@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
-from .models import User, Bar, Drink, Tab
+from .models import Employee, Bar, Drink, Tab
 import bcrypt
 
 
@@ -21,7 +21,7 @@ def register(request):
         return redirect('/')
     password = request.POST ['password']
     hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    user = User.objects.create(
+    employee = Employee.objects.create(
         name = request.POST['name'],
         is_manager = request.POST['is_manager'],
         password = hashed
@@ -39,7 +39,7 @@ def login(request):
         return redirect('/')
     employee_users = Employee.objects.filter(name = request.POST['name'])
     our_employee = employee_users[0]
-    if bcrypt.checkpw(request.POST['password'].encode(), our_user.password.encode()):
+    if bcrypt.checkpw(request.POST['password'].encode(), our_employee.password.encode()):
         request.session['employee_id'] = our_employee.id
         return redirect ('/')
     messages.error(request, 'Password doesnt match whats on file! Try again!')
