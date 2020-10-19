@@ -1,6 +1,7 @@
 from django.db import models
 from patron_app.models import User
 import re
+from patron_app.models import User
 
 class EmployeeManager(models.Manager):
     def employee_validator(self, form_data):

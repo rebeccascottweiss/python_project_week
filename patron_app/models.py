@@ -14,8 +14,8 @@ class Identification(models.Model):
     ident_num  = models.CharField(max_length=255) # number on state issued ID
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    dob = models.Date()
-    exp = models.Date()
+    # dob = models.Date()
+    # exp = models.Date()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
