@@ -1,8 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import User
+import bcrypt
 
 # Create your views here.
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> 442a4b8e1518f9263c45eba0e88beecadc5b40c2
 def home(request):
     if 'patron_id' not in request.session:
         return render(request, 'patron_login.html')
@@ -38,6 +44,7 @@ def login(request):
         return('/')
     messages.error(request, "We don't recognize the email you entered.")
     return redirect('/')
+<<<<<<< HEAD
     
 def start_tab(request):
     context = {
@@ -49,3 +56,6 @@ def logout(request):
     request.session.clear()
     return redirect('/')
 >>>>>>> Stashed changes
+=======
+    
+>>>>>>> 442a4b8e1518f9263c45eba0e88beecadc5b40c2
