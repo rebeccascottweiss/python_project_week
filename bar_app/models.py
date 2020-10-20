@@ -1,7 +1,6 @@
 from django.db import models
-from patron_app.models import User
+from patron_app.models import Patron
 import re
-from patron_app.models import User
 
 class EmployeeManager(models.Manager):
     def employee_validator(self, form_data):
@@ -69,7 +68,7 @@ class Employee(models.Model):
     #because they change and would be reset with each shift? 
 
 class Tab(models.Model):
-    patron = models.ForeignKey(User, related_name='tabs', on_delete=models.CASCADE)
+    patron = models.ForeignKey(Patron, related_name='tabs', on_delete=models.CASCADE)
     bartender = models.ManyToManyField(Employee, related_name='open_tabs')
     drinks = models.ManyToManyField(Drink, related_name='patron_tabs')
     payment_reference = models.CharField(max_length=500, null=True)
