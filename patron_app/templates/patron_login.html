@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,, shrink-to-fit=no">
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -11,8 +11,9 @@
     <title>Document</title>
 </head>
 <body class = "p-3 mb-2 bg-warning text-dark">
+    <h1 class="display-4">Pay My Tab!</h1>
     <div class="container">
-        <h1>Registration</h1>
+        <h2>Registration</h2>
         {% if messages %}
             <ul class='messages'>
                 {% for message in messages %}
@@ -53,7 +54,7 @@
         </form>
     </div>
     <div class="container-right">
-        <h1>Login</h1>
+        <h2>Login</h2>
         <!-- {% if messages %}
             <ul class='messages'>
                 {% for message in messages %}

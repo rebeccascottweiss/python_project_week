@@ -34,7 +34,7 @@ class Drink(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(default='')
     cost = models.IntegerField()
-    bar = models.ForeignKey(Bar, related_name='drinks', on_delete= models.CASCADE)
+    # bar = models.ForeignKey(Bar, related_name='drinks', on_delete= models.CASCADE)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
 
