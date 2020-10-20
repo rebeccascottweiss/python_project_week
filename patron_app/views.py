@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Patron
+from .models import User
 import bcrypt
 
 # Create your views here.
@@ -10,12 +10,12 @@ def home(request):
     return render(request, 'patron_home.html')
 
 def register(request):
-    errors = Patron.objects.validate_register(request.POST)
+    errors = User.objects.validate_register(request.POST)
     if len(errors) > 0:
         for msg in errors.values():
             messages.error(request, msg)
         return redirect('/')
-    current_patron = Patron.objects.create(
+    current_patron = User.objects.create(
         first_name = request.POST['first_name'],
         last_name = request.POST['last_name'],
         age = request.POST['age'],
@@ -26,8 +26,8 @@ def register(request):
     return redirect('/')
 
 def login(request):
-    current_patron = Patron.objects.filter(email=request.POST['patron_email'])
-    errors = Patron.objects.validate_login(request.POST)
+    current_patron = User.objects.filter(email=request.POST['patron_email'])
+    errors = User.objects.validate_login(request.POST)
     if len(errors) > 0:
         for msg in errors.values():
             messages.error(request, msg)

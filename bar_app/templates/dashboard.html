@@ -21,7 +21,7 @@
             <li>Whiskey - $3.00</li>
         </ul>
     </div>
-    {%for tab in bartender.open_tabs%}
+    {%for tab in bartender.open_tabs.all%}
     <div class="table">
         <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
         <ul>

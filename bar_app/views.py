@@ -14,7 +14,7 @@ def index(request):
     return render(request, 'index.html',context)
 
 def register(request):
-    errs = Employee.objects.user_validator(request.POST)
+    errs = Employee.objects.employee_validator(request.POST)
     if len(errs) > 0:
         for msg in errs.values():
             messages.error(request, msg)
