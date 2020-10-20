@@ -14,9 +14,17 @@
 <body class="container">
     <header>
         <h3>Welcome!</h3>
-        <a href="/logout" class="btn btn-secondary">Logout</a>
-        <!--<a href="/patron/account">Account</a>-->
+        <nav>
+            <a href="/patron/account">Account</a>
+            <a href="/logout" class="btn btn-secondary">Logout</a>
+        </nav>
     </header>
     <a href="/start_tab" class="btn btn-dark">Start a Tab</a>
+    <p>History</p>
+    {% for tab in patron.tabs.all %}
+        <!-- Checking to see if tabs are being created by start_tab -->
+        <p>Tab #{{tab.id}}</p>
+    {% endfor %}
+
 </body>
 </html>

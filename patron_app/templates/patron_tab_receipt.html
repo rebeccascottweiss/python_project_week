@@ -13,14 +13,10 @@
             <a href="/logout">Logout</a>
         </nav>
     </header>
-    <a href="/pay_tab">Pay my tab</a>
-    <div class="container">
-        {% for drink in patron.tabs.drinks.all %}
-            <p>{{drink.name}}</p>
-            <p>{{drink.cost}}</p>
-        {% endfor %}
-        <!--Total for current tab-->
-        <p>{{total}}</p>
-    </div>
+    <h2>Your order has processed</h2>
+    <h4>Thank you!</h4>
+    <a href="/return_home"> Return to home page </a>
+    <!-- Add in a receipt of their complete order, would also be good to send it to their email. -->
+    <!-- {{patron.tabs.first.total}} -->
 </body>
 </html>
