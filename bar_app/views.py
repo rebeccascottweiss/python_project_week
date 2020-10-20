@@ -6,6 +6,7 @@ import bcrypt
 
 
 def index(request):
+    request.session['clocked_in'] = []
     if 'employee_id' in request.session:
         return redirect('/bar/dashboard')
     context = {
@@ -43,11 +44,14 @@ def login(request):
         request.session['employee_id'] = our_employee.id
         return redirect ('/bar')
     messages.error(request, 'Password doesnt match whats on file! Try again!')
+    request.session['clocked_in'].append(our_employee)
     return redirect('/bar/dashboard')
 
 
-def logout(request):
-    request.session.clear()
+def cashout(request):
+    employee = Employee.objects.get(id=request.session['employee_id'])
+    cash_out = request.session.pop('employee_id')
+    request.session['clocked in'].pop(employee)
     return redirect ('/bar')
 
 
@@ -56,6 +60,8 @@ def dashboard(request):
         return redirect ('/bar')
     context = {
         'bartender': Employee.objects.get(id = request.session['employee_id']),
+        'all_tabs': Tab.objects.all(),
+        'all_bartenders': request.session['clocked_in']
     }
     return render (request, 'dashboard.html', context)
 
@@ -96,3 +102,23 @@ def deletedrink(request,number):
     delete_drink.delete()
     return redirect('/bar/drinks')
 
+def edit_tab(request, tab_id):
+    context = {
+        'bartender': Employee.objects.get(id=request.session['employee_id']), 
+        'tab': Tab.objects.get(id=tab_id),
+        'drinks': Drink.objects.all(),
+    }
+    return render(request, 'tabs.html', context)
+
+
+def delete_drink(request, tab_id, drink_id):
+    tab = Tab.objects.get(id=tab_id)
+    drink = Drink.objects.get(id=drink_id)
+    tab.drinks.remove(drink)
+    return redirect(f'/bar/edit/{tab_id}')
+
+def add_order(request, tab_id):
+    tab = Tab.objects.get(id=tab_id)
+    drink = Drink.objects.get(id=request.POST['drink'])
+    tab.drinks.add(drink)
+    return redirect(f'/bar/edit/{tab_id}')
