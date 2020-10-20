@@ -7,33 +7,12 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1copy" crossorigin="anonymous"></script>
     <script src="://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <title>Pay My Tab</title>
+    <title>Document</title>
 </head>
 <body class = "p-3 mb-2 bg-warning text-dark">
+    <a href="/bar/dashboard">Go Back</a>
+    <h2>Register a New Employee</h2>
 
-    <h1>Employee Clock In</h1>
-    <form action="/bar/login" method = "POST">
-        {% csrf_token %}
-        <label for="name">Employee Name:</label>
-        <input type="text" name="name" id="name"><br>
-        <label for="employee_id">Employee ID:</label>    
-        <input type="number" name="employee_id" id="employee_id">
-        <br>
-        <label for="password">Password:</label>    
-        <input type="password" name="password" id="password">
-        <br> 
-        <input type="submit" value="Clock In">
-    </form>
-    {% if messages %}
-    <ul>
-        {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-
-
-<h4>New Employee</h4>
     <form action="/bar/register" method = "POST">
         {% csrf_token %}
     
