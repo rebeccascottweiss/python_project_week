@@ -31,7 +31,7 @@ class Validation(models.Manager):
         if len(postData['last_name']) < 2:
             errors['last_name'] = "Your last name must be longer than 2 letters."
         # add in check to make sure all letters
-        if not Name_REGEX.match(postData['f_name']) or not Name_REGEX.match(postData['last_name']):
+        if not Name_REGEX.match(postData['first_name']) or not Name_REGEX.match(postData['last_name']):
             errors['first_name_alph'] = "Your name must only contain letters."
         # check if email is valid email format
         if not Email_REGEX.match(postData['email_address']):
@@ -50,6 +50,7 @@ class Validation(models.Manager):
         # if datetime.strptime(postData['b_day'], '%Y-%m-%d') > datetime.now():
         #     errors['b_day'] = "Your birthday must be in the past."
         return errors
+        
     def validate_login(self, postData):
         user = User.objects.filter(email=postData['user_email'])
         Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
