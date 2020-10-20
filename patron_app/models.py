@@ -37,7 +37,7 @@ class Validation(models.Manager):
         if not Email_REGEX.match(postData['email_address']):
             errors['email_address'] = "You must enter a valid email address."
         # check to see if someone already has this email
-        for user in User.objects.all():
+        for user in .objects.all():
             if user.email == postData['email']:
                 errors['dup_email'] = "That email is already registered. Try logging in."
         if len(postData['password']) < 8:
@@ -61,7 +61,7 @@ class Validation(models.Manager):
             errors['email'] = "You must enter a valid email address."
         return errors
 
-class User(models.Model):
+class Patron(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     valid_to_drink = models.BooleanField()
