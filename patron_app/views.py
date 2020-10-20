@@ -18,7 +18,7 @@ def register(request):
     current_patron = User.objects.create(
         first_name = request.POST['first_name'],
         last_name = request.POST['last_name'],
-        age = request.POST['age'],
+        valid_to_drink = request.POST['valid_to_drink'],
         email_address = request.POST['email_address'],
         password = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt()).decode()
     )
@@ -40,3 +40,6 @@ def login(request):
     messages.error(request, "We don't recognize the email you entered.")
     return redirect('/')
     
+def logout(request):
+    request.session.clear()
+    return redirect('/')
