@@ -27,7 +27,7 @@ def register(request):
         password = hashed
     )
     request.session['employee_id'] = employee.id
-    return redirect ('/bar/dashboard')
+    return redirect ('/bar/managerdash')
 
 
 def login(request):
@@ -59,6 +59,10 @@ def dashboard(request):
     }
     return render (request, 'dashboard.html', context)
 
+def managerdash(request):
+
+    return render(request, 'managerdashboard.html')
+
 def close_out(request, tab_id):
     #payment methodology goes here somewhere. Should there be a rendered html with ways to close out? 
     return redirect('/bar/dashboard')
@@ -77,11 +81,7 @@ def employees(request):
 
 def addemployee(request):
 
-    return render(request, 'addemployee.html')
-
-def newemployee(request):
-
-    return redirect ('/bar/dashboard')
+    return render (request, 'addemployee.html')
 
 def adddrink(request):
 
