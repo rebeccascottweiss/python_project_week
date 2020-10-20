@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import User
+from .models import Patron
+from bar_app.models import Tab
 import bcrypt
 
 # Create your views here.
@@ -40,6 +41,30 @@ def login(request):
     messages.error(request, "We don't recognize the email you entered.")
     return redirect('/')
     
+def start_tab(request):
+    # check if patron has payment applications linked?
+    # if patron payment send to current tab page
+    if not request.session['payment_info_collected']:
+        context = {
+            'patron': Patron.objects.get(id=request.session['patron_id'])
+        }
+        return render(request, 'payment_info.html', context)
+    return redirect('/patron_tab')
+
+def add_payment(request):
+    # add T/F for if payment information is successful
+    request.session['payment_info_collected'] = True
+    return redirect('/patron_tab')
+
+def patron_tab(request):
+    patron = Patron.objects.get(id=request.session['patron_id'])
+    tab_total = sum(patron.tab.drinks.all().cost)
+    context = {
+        'patron': patron,
+        'total': tab_total,
+    }
+    return render(request, 'patron_tab.html', context)
+
 def logout(request):
     request.session.clear()
     return redirect('/')
