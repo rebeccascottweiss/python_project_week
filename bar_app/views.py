@@ -63,3 +63,31 @@ def close_out(request, tab_id):
     #payment methodology goes here somewhere. Should there be a rendered html with ways to close out? 
     return redirect('/bar/dashboard')
 
+def drinks(request):
+    context = {
+        'all_drinks' : Drink.objects.all()
+    }
+    return render(request, 'drinks.html', context)
+
+def employees(request):
+    context = {
+        'all_employees' : Employee.objects.all()
+    }
+    return render (request, 'employees.html', context)
+
+def addemployee(request):
+
+    return render(request, 'addemployee.html')
+
+def newemployee(request):
+
+    return redirect ('/bar/dashboard')
+
+def adddrink(request):
+
+    return render (request, 'adddrink.html')
+
+def newdrink(request):
+
+    return redirect('/bar/drinks')
+
