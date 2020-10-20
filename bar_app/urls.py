@@ -7,8 +7,8 @@ urlpatterns = [
     path('login', views.login),
     path('cashout', views.cashout),
     path('dashboard',views.dashboard),
-    path('drinks/delete/<number>', views.deletedrink)
-    path('dashboard/managerdash', views.managerdash),
+    path('<tab_id>/close_out', views.close_out),
+    path('drinks/delete/<number>', views.deletedrink),
     path('addemployee', views.addemployee),
     path('adddrink', views.adddrink),
     path('adddrink/new', views.newdrink),
