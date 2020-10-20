@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,, shrink-to-fit=no">
+    {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1copy" crossorigin="anonymous"></script>
@@ -10,13 +11,12 @@
     <title>Document</title>
 </head>
 <body class = "p-3 mb-2 bg-warning text-dark">
-    <a href="/bar/managerdash">Go Back</a>
-    <a href="bar/dashboard">Go Home</a>
+    <a href="/bar/dashboard">Go Back</a>
     <a href="/logout">Log Out</a>
 
     <h2>Register a New Employee</h2>
 
-    <form action="/bar/managerdash/addemployee/register" method = "POST">
+    <form action="/bar/addemployee/register" method = "POST">
         {% csrf_token %}
     
         <label for="name">Employee Name:</label>
