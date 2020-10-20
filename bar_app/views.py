@@ -6,9 +6,8 @@ import bcrypt
 
 
 def index(request):
-    request.session['clocked_in'] = []
-    if 'employee_id' in request.session:
-        return redirect('/bar/dashboard')
+    if 'clocked_in' not in request.session:
+        request.session['clocked_in'] = []
     context = {
         "all_employees": Employee.objects.all(),
     }
@@ -122,3 +121,7 @@ def add_order(request, tab_id):
     drink = Drink.objects.get(id=request.POST['drink'])
     tab.drinks.add(drink)
     return redirect(f'/bar/edit/{tab_id}')
+
+def switch_employee(request):
+    request.session['employee_id']=request.POST['employee']
+    return redirect('/bar/dashboard')

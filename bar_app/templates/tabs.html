@@ -9,7 +9,15 @@
     <header>
         <h3>Welcome {{bartender.name}}!</h3>
         <div class="navigation">
-            <a href="">Switch Bartenders</a> | <a href="">Schedule</a> | <a href="">Cashout</a>
+            <form action="switch_employee" method="post">
+                {%csrf_token%}
+                <select name="employee" id="employee">
+                    {%for employee in all_bartenders%}
+                    <option value="{{employee.id}}">{{employee.name}}</option>
+                    {%endfor%}
+                </select>
+                <input type="submit" value="Switch Bartender">
+            </form> | <a href="">Schedule</a> | <a href="cashout">Cashout</a>
         </div>
         {%if bartender.is_manager%}
         <div class="navigation">
