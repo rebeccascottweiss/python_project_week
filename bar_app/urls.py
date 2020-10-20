@@ -7,10 +7,14 @@ urlpatterns = [
     path('login', views.login),
     path('dashboard',views.dashboard),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     path('<tab_id>/close_out', views.close_out),
 =======
     path('drinks/delete/<number>', views.deletedrink),
     path('dashboard/managerdash', views.managerdash),
+>>>>>>> Stashed changes
+=======
+    path('drinks/delete/<number>', views.deletedrink),
 >>>>>>> Stashed changes
     path('addemployee', views.addemployee),
     path('adddrink', views.adddrink),
