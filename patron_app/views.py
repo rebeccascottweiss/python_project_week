@@ -3,6 +3,7 @@ from django.contrib import messages
 from .models import Patron
 from bar_app.models import Tab
 import bcrypt
+import stripe
 
 # Create your views here.
 def home(request):
@@ -93,6 +94,7 @@ def patron_tab(request):
 #should this come after selecting tip?
 def pay_tab(request):
     #process payment info
+    #print(stripe_trial)
     return redirect('/tab_receipt')
 
 def tab_receipt(request):
@@ -128,4 +130,15 @@ def return_home(request):
 
 def logout(request):
     request.session.clear()
+    return redirect('/')
+
+def stripe_trial(request):
+    stripe.api_key = "sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q"
+
+    return_val = stripe.PaymentIntent.create(
+        amount=2000,
+        currency="usd",
+        payment_method_types=["card"],
+    )
+    print(return_val)
     return redirect('/')
