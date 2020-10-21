@@ -41,7 +41,7 @@ def login(request):
     our_employee = employee_users[0]
     if bcrypt.checkpw(request.POST['password'].encode(), our_employee.password.encode()):
         request.session['employee_id'] = our_employee.id
-        return redirect ('/bar')
+        return redirect ('/bar/dashboard')
     messages.error(request, 'Password doesnt match whats on file! Try again!')
     request.session['clocked_in'].append(our_employee)
     return redirect('/bar/dashboard')
@@ -84,7 +84,6 @@ def addemployee(request):
     return render (request, 'addemployee.html')
 
 def adddrink(request):
-
     return render (request, 'adddrink.html')
 
 def newdrink(request):
@@ -96,10 +95,15 @@ def newdrink(request):
     )
     return redirect('/bar/drinks')
 
-def deletedrink(request,number):
-    delete_drink = Drink.objects.get(id = number)
-    delete_drink.delete()
+def removedrink(request,number):
+    remove_drink = Drink.objects.get(id = number)
+    remove_drink.delete()
     return redirect('/bar/drinks')
+
+def removeemployee(request,number):
+    remove_employee = Employee.objects.get(id = number)
+    remove_employee.delete()
+    return redirect('/bar/employees')
 
 def edit_tab(request, tab_id):
     context = {
@@ -125,3 +129,18 @@ def add_order(request, tab_id):
 def switch_employee(request):
     request.session['employee_id']=request.POST['employee']
     return redirect('/bar/dashboard')
+
+def editdrink(request,number):
+    context ={
+        'this_drink' : Drink.objects.get(id = number)
+    }
+    return render (request, 'editdrink.html', context)
+
+
+def updatedrink(request,number):
+    edit_drink = Drink.objects.get(id = number)
+    edit_drink.name = request.POST['name']
+    edit_drink.description = request.POST ['description']
+    edit_drink.cost = request.POST['cost']
+    edit_drink.save()
+    return redirect ('/bar/drinks')
