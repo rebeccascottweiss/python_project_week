@@ -30,8 +30,9 @@
     <a href="/start_tab" class="btn btn-dark">Start a Tab</a>
     <p>History</p>
     {% for tab in patron.tabs.all %}
-    <!-- Checking to see if tabs are being created by start_tab -->
-    <p>Tab #{{tab.id}}</p>
+
+        <!-- Checking to see if tabs are being created by start_tab -->
+        <p>Tab #{{tab.id}}</p>
     {% endfor %}
 
 </body>

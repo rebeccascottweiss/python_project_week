@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarTab</title>
+</head>
+<body>
+    <header>
+        <h3>{{patron.first_name}}</h3>
+        <nav>
+            <a href="/patron/account">Account</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <h2>Your order has processed</h2>
+    <h4>Thank you!</h4>
+    <a href="/return_home"> Return to home page </a>
+    <!-- Add in a receipt of their complete order, would also be good to send it to their email. -->
+    <!-- {{patron.tabs.first.total}} -->
+</body>
+</html>

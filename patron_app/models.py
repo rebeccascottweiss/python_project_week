@@ -52,12 +52,12 @@ class Validation(models.Manager):
         return errors
         
     def validate_login(self, postData):
-        user = User.objects.filter(email=postData['user_email'])
+        patron = Patron.objects.filter(email_address=postData['patron_email'])
         Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         errors = {}
-        if len(postData['user_password']) < 8:
+        if len(postData['patron_password']) < 8:
             errors['password'] = "Your password must be 8 or more characters."
-        if not Email_REGEX.match(postData['user_email']):
+        if not Email_REGEX.match(postData['patron_email']):
             errors['email'] = "You must enter a valid email address."
         return errors
 
