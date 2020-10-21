@@ -1,0 +1,5 @@
+import stripe
+stripe.api_key = 'sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q'
+
+
+print(stripe.Customer.create())
