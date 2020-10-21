@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://js.stripe.com/v3/"></script>
+    <title>Document</title>
+</head>
+<body>
+    <input id="cardholder-name" type="text" />
+    <!-- placeholder for Elements -->
+    <form id="setup-form" data-secret="{{ client_secret }}">
+        <div id="card-element"></div>
+        <button id="card-button">Save Card</button>
+    </form>
+</body>
+</html>

@@ -4,6 +4,10 @@ from .models import Patron
 from bar_app.models import Tab
 import bcrypt
 import stripe
+stripe.api_key = "sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q"
+
+def setup_stripe_customer():
+    return stripe.Customer.create()
 
 # Create your views here.
 def home(request):
@@ -20,12 +24,18 @@ def register(request):
         for msg in errors.values():
             messages.error(request, msg)
         return redirect('/')
+
+    stripe_customer = setup_stripe_customer()
+    # print("This is the stripe customre: ",stripe_customer)
+    # print("this is the stripe customr_id: ", stripe_customer['id'])
+
     current_patron = Patron.objects.create(
         first_name = request.POST['first_name'],
         last_name = request.POST['last_name'],
         valid_to_drink = request.POST['valid_to_drink'],
         email_address = request.POST['email_address'],
-        password = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt()).decode()
+        password = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt()).decode(),
+        external_id = stripe_customer['id'],
     )
     request.session['patron_id'] = current_patron.id
     return redirect('/')
@@ -57,6 +67,12 @@ def update_info(request):
 def start_tab(request):
     # check if patron has payment applications linked?
     # if patron payment send to current tab page
+    start=stripe_start()
+    print(start)
+    request.session['start'] = start
+    print(request.session['start'])
+    print(request.session['start'].id) #because it is a class instance we can just do .id
+    #determine what to do with payment id
     if 'payment_info_collected' not in request.session:
         context = {
             'patron': Patron.objects.get(id=request.session['patron_id'])
@@ -132,13 +148,20 @@ def logout(request):
     request.session.clear()
     return redirect('/')
 
-def stripe_trial(request):
-    stripe.api_key = "sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q"
-
+def stripe_start():
     return_val = stripe.PaymentIntent.create(
-        amount=2000,
+        amount=100,
         currency="usd",
         payment_method_types=["card"],
     )
-    print(return_val)
-    return redirect('/')
+    return return_val
+
+def card_wallet(request):
+    current_patron = Patron.objects.get(id=request.session['patron_id'])
+    intent = stripe.SetupIntent.create(
+    customer = current_patron.external_id
+    )
+    context = {
+        'client_secret' : intent.client_secret
+    }
+    return render(request,'card_wallet.html', context)
