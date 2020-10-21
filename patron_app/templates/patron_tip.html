@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarTab</title>
+</head>
+<body>
+    <header>
+        <h3>{{patron.first_name}}</h3>
+        <nav>
+            <a href="/patron/account">Account</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <div>
+        <h1>Thank You!</h1>
+        <h3>Would you like to add a tip?</h3>
+        <form action="/tip_select" method="POST">
+            {% csrf_token %}
+            <input type="radio" id="zero" name="tip" value="0">
+            <label for="zero">No tip</label>
+            <input type="radio" id="ten" name="tip" value="10">
+            <label for="ten">10%</label>
+            <input type="radio" id="fifteen" name="tip" value="15">
+            <label for="fifteen">15%</label>
+            <input type="radio" id="twenty" name="tip" value="20">
+            <label for="twenty">20%</label>
+            <input type="radio" id="twenty-five" name="tip" value="25">
+            <label for="twenty-five">25%</label>
+            <label for="other">Other:</label>
+            <input type="number" id="other" name="other_tip">
+            <input type="submit" value="Select">
+        </form>
+        <!-- Potential place for lyft/uber link -->
+    </div>
+</body>
+</html>
