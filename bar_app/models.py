@@ -5,25 +5,6 @@ import re
 class EmployeeManager(models.Manager):
     def employee_validator(self, form_data):
         errors = {}
-        if len(form_data['first_name']) < 2:
-            errors['name'] = 'Your name isnt long enough!'
-        if len(form_data['password']) < 4:
-            errors['password'] = 'Password isnt long enough!'
-        if form_data['password'] != form_data ['confirm_password']:
-            errors['confirm_password'] = "Passwords dont match! Try again!"
-        return errors
-    def login_validator(self, form_data):
-        errors = {}
-        # if not name.match(form_data['name']):    # test whether a field matches the pattern            
-        #     errors['name'] = "Invalid Employee"
-        if len(form_data['password']) < 4:
-            errors['password'] = 'Password isnt long enough!'
-        return errors
-
-
-class EmployeeManager(models.Manager):
-    def employee_validator(self, form_data):
-        errors = {}
         if len(form_data['name']) < 2:
             errors['name'] = 'Your name isnt long enough!'
         if len(form_data['password']) < 4:
