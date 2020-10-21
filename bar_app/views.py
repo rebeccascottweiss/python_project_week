@@ -50,6 +50,10 @@ def login(request):
     messages.error(request, 'Password doesnt match whats on file! Try again!')
     return redirect('/bar')
 
+def logout(request):
+    request.session.clear()
+    return redirect('/bar')
+
 
 def cashout(request):
     employee = Employee.objects.get(id=request.session['employee_id'])

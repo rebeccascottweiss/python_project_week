@@ -38,7 +38,7 @@ class Validation(models.Manager):
             errors['email_address'] = "You must enter a valid email address."
         # check to see if someone already has this email
         for patron in Patron.objects.all():
-            if patron.email == postData['email']:
+            if patron.email_address == postData['email_address']:
                 errors['dup_email'] = "That email is already registered. Try logging in."
         if len(postData['password']) < 8:
             errors['password'] = "Your password must be 8 or more characters."
