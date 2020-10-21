@@ -17,7 +17,7 @@
                     {%endfor%}
                 </select>
                 <input type="submit" value="Switch Bartender">
-            </form> | <a href="">Schedule</a> | <a href="cashout">Cashout</a>
+            </form> | <a href="">Schedule</a> | <a href="/bar/cashout">Cashout</a>
         </div>
         {%if bartender.is_manager%}
         <div class="navigation">
@@ -26,11 +26,10 @@
         </div>
         {%endif%}
     </header>
-    {%if bartender.is_manager%}
         <div class="tab">
             <h2>{{tab.id}}</h2>
             <h3>Add Drink</h3>
-            <form action="/adddrink/{{tab.id}}" method="post">
+            <form action="/bar/adddrink/{{tab.id}}" method="post">
             {%csrf_token%}
             <select name="drink" id="drink_menue">
                 {%for drink in drinks%}
@@ -41,29 +40,10 @@
             </form>
             <ul>
                 {%for drink in tab.drinks.all%}
-                <li>{{drink.name}} - {{drink.cost}} <a href="delete_drink/{{tab.id}}/{{drink.id}}">Delete</a></li>
-                {%end for%}
-            </ul>
-        </div>
-    {%else%}
-        <div class="tab">
-            <h2>{{tab.id}}</h2>
-            <h3>Add Drink</h3>
-            <form action="/adddrink/{{tab.id}}" method="post">
-            {%csrf_token%}
-            <select name="drink" id="drink_menue">
-                {%for drink in drinks%}
-                <option value="{{drink.id}}">{{drink.name}}</option>
+                <li>{{drink.name}} - {{drink.cost}} {%if bartender.is_manager%}<a href="/bar/delete_drink/{{tab.id}}/{{drink.id}}">Delete</a>{%endif%}</li>
                 {%endfor%}
-            </select>
-            <input type="submit" value="Add Drink">
-            </form>
-            <ul>
-                {%for drink in tab.drinks.all%}
-                <li>{{drink.name}} - {{drink.cost}} </li>
-                {%end for%}
             </ul>
         </div>
-    {%endif%}
+        
 </body>
 </html>
