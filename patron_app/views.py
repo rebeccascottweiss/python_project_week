@@ -4,7 +4,6 @@ from .models import Patron
 from bar_app.models import Tab
 import bcrypt
 import stripe
-
 # Create your views here.
 def home(request):
     if 'patron_id' not in request.session:
@@ -57,6 +56,12 @@ def update_info(request):
 def start_tab(request):
     # check if patron has payment applications linked?
     # if patron payment send to current tab page
+    start=stripe_start()
+    print(start)
+    request.session['start'] = start
+    print(request.session['start'])
+    print(request.session['start'].id) #because it is a class instance we can just do .id
+    #determine what to do with payment id
     if 'payment_info_collected' not in request.session:
         context = {
             'patron': Patron.objects.get(id=request.session['patron_id'])
@@ -132,13 +137,11 @@ def logout(request):
     request.session.clear()
     return redirect('/')
 
-def stripe_trial(request):
+def stripe_start():
     stripe.api_key = "sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q"
-
     return_val = stripe.PaymentIntent.create(
-        amount=2000,
+        amount=100,
         currency="usd",
         payment_method_types=["card"],
     )
-    print(return_val)
-    return redirect('/')
+    return return_val
