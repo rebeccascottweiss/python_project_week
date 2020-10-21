@@ -67,6 +67,7 @@ class Patron(models.Model):
     valid_to_drink = models.BooleanField()
     email_address = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
+    external_id = models.CharField(max_length=255, default="")
     #identification = models.ForeignKey(Identification, related_name="users", on_delete=models.CASCADE)
     #payments = models.ForeignKey(Payment, related_name="users", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
