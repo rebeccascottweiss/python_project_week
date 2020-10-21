@@ -20,8 +20,19 @@
 </head>
 
 <body class="p-3 mb-2 bg-light text-dark">
-    <h1>WOOO! You're a patron!</h1>
-    <a href="/logout">Logout</a>
+    <header>
+        <h3>Welcome!</h3>
+        <nav>
+            <a href="/patron/account">Account</a>
+            <a href="/logout" class="btn btn-secondary">Logout</a>
+        </nav>
+    </header>
+    <a href="/start_tab" class="btn btn-dark">Start a Tab</a>
+    <p>History</p>
+    {% for tab in patron.tabs.all %}
+    <!-- Checking to see if tabs are being created by start_tab -->
+    <p>Tab #{{tab.id}}</p>
+    {% endfor %}
 
 </body>
 
