@@ -25,12 +25,14 @@
             <form action="switch_employee" method="post">
                 {%csrf_token%}
                 <select name="employee" id="employee">
-                    {%for employee in all_bartenders%}
+                    {%for employee in all_employees%}
+                    {%if employee.id in clocked_in and employee.id != bartender.id%}
                     <option value="{{employee.id}}">{{employee.name}}</option>
+                    {%endif%}
                     {%endfor%}
                 </select>
                 <input type="submit" value="Switch Bartender">
-            </form> | <a href="/bar">Clock In</a> | <a href="">Schedule</a> | <a href="cashout">Cashout</a>
+            </form> | <a href="/bar">Clock In</a> | <a href="">Schedule</a> | <a href="/bar/cashout">Cashout</a>
         </div>
         {%if bartender.is_manager%}
         <div class="navigation">
@@ -53,6 +55,14 @@
     </div>
     {%endfor%}
     {%else%}
+    {%for tab in all_tabs%}
+    {%if tab.id in new_tabs%}
+    <div class="table">
+        <h3>New Tab!</h3>
+        <a href="pick_up/{{tab.id}}">Pick it Up</a>
+    </div>
+    {%endif%}
+    {%endfor%}
     {%for tab in bartender.open_tabs.all%}
     <div class="table">
         <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
@@ -62,7 +72,8 @@
         {%endfor%}
         </ul>
         <p>Total = {{tab.total}}</p>
-        <a href="{{tab.id}}/close_out" class="button">Close Out</a>
+        <a href="close_out/{{tab.id}}" class="button">Close Out</a>
+        <a href="drop/{{tab.id}}">Drop Tab</a>
     </div>
     {%endfor%}
     {%endif%}

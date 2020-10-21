@@ -11,9 +11,11 @@ def index(request):
     context = {
         "all_employees": Employee.objects.all(),
     }
+    print(request.session['clocked_in'])
     return render(request, 'index.html',context)
 
 def register(request):
+    print(request.POST['name'])
     errs = Employee.objects.employee_validator(request.POST)
     if len(errs) > 0:
         for msg in errs.values():
@@ -26,12 +28,14 @@ def register(request):
         is_manager = request.POST['is_manager'],
         password = hashed
     )
+    print(employee)
     request.session['employee_id'] = employee.id
+    request.session['clocked_in'].append(employee.id)
+    print(employee, request.session['clocked_in'])
     return redirect ('/bar/employees')
 
 
 def login(request):
-    print(request.POST['name'])
     errs = Employee.objects.login_validator(request.POST)
     if len(errs) > 0:
         for msg in errs.values():
@@ -41,27 +45,35 @@ def login(request):
     our_employee = employee_users[0]
     if bcrypt.checkpw(request.POST['password'].encode(), our_employee.password.encode()):
         request.session['employee_id'] = our_employee.id
+        request.session['clocked_in'].append(our_employee.id)
         return redirect ('/bar/dashboard')
     messages.error(request, 'Password doesnt match whats on file! Try again!')
-    request.session['clocked_in'].append(our_employee)
-    return redirect('/bar/dashboard')
+    return redirect('/bar')
 
 
 def cashout(request):
     employee = Employee.objects.get(id=request.session['employee_id'])
     cash_out = request.session.pop('employee_id')
-    request.session['clocked in'].pop(employee)
+    request.session['clocked_in'].remove(employee.id)
     return redirect ('/bar')
 
 
 def dashboard(request):
+    print(Tab.objects.all())
     if 'employee_id' not in request.session:
         return redirect ('/bar')
+    new_tabs = []
+    for tab in Tab.objects.all():
+        if not tab.bartender.all():
+            new_tabs.append(tab.id)        
     context = {
         'bartender': Employee.objects.get(id = request.session['employee_id']),
         'all_tabs': Tab.objects.all(),
-        'all_bartenders': request.session['clocked_in']
+        'all_employees': Employee.objects.all(),
+        'clocked_in': request.session['clocked_in'],
+        'new_tabs' : new_tabs,
     }
+    print(context)
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
@@ -144,3 +156,16 @@ def updatedrink(request,number):
     edit_drink.cost = request.POST['cost']
     edit_drink.save()
     return redirect ('/bar/drinks')
+
+def pick_up(request, tab_id):
+    bartender = Employee.objects.get(id=request.session['employee_id'])
+    tab = Tab.objects.get(id=tab_id)
+    tab.bartender.add(bartender)
+    return redirect('/bar/dashboard')
+
+def drop(request, tab_id):
+    bartender = Employee.objects.get(id=request.session['employee_id'])
+    tab = Tab.objects.get(id=tab_id)
+    tab.bartender.remove(bartender)
+    return redirect('/bar/dashboard')
+
