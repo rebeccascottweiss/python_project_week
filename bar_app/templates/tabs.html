@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabs</title>
+</head>
+<body>
+    <header>
+        <h3>Welcome {{bartender.name}}!</h3>
+        <div class="navigation">
+            <form action="switch_employee" method="post">
+                {%csrf_token%}
+                <select name="employee" id="employee">
+                    {%for employee in all_bartenders%}
+                    <option value="{{employee.id}}">{{employee.name}}</option>
+                    {%endfor%}
+                </select>
+                <input type="submit" value="Switch Bartender">
+            </form> | <a href="">Schedule</a> | <a href="/bar/cashout">Cashout</a>
+        </div>
+        {%if bartender.is_manager%}
+        <div class="navigation">
+            <a href="/bar/drinks">Drinks:</a>
+            <a href="/bar/employees">Employees:</a> 
+        </div>
+        {%endif%}
+    </header>
+        <div class="tab">
+            <h2>{{tab.id}}</h2>
+            <h3>Add Drink</h3>
+            <form action="/bar/adddrink/{{tab.id}}" method="post">
+            {%csrf_token%}
+            <select name="drink" id="drink_menue">
+                {%for drink in drinks%}
+                <option value="{{drink.id}}">{{drink.name}}</option>
+                {%endfor%}
+            </select>
+            <input type="submit" value="Add Drink">
+            </form>
+            <ul>
+                {%for drink in tab.drinks.all%}
+                <li>{{drink.name}} - {{drink.cost}} {%if bartender.is_manager%}<a href="/bar/delete_drink/{{tab.id}}/{{drink.id}}">Delete</a>{%endif%}</li>
+                {%endfor%}
+            </ul>
+        </div>
+        
+</body>
+</html>

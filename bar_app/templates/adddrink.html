@@ -18,20 +18,27 @@
     <title>Document</title>
 </head>
 
-<body class="p-3 mb-2 bg-warning text-dark">
-    <a href="/bar/dashboard">Go Back</a>
-
-    <h3>Add a Drink</h3>
+<body class="p-3 mb-2 bg-light text-dark">
+    <div class="d-flex flex-row-reverse">
+        <div class="p-2"><a href="/bar/dashboard">Go Back</a></div>
+        <div class="p-2"><a href="/logout">Log Out</a></div>
+    </div>
+    <div class="d-flex justify-content-center">
+    <h3>Add a Drink</h3></div>
+    <div class="d-flex justify-content-center">
     <form action="/bar/adddrink/new" method="POST">
+        <div class="form-group">
         {% csrf_token %}
         <label for="name">Name:</label>
-        <input type="text" name="name" id="name"><br>
+        <input type="text" class="form-control" name="name" id="name"><br>
         <label for="description">Drink Description:</label>
-        <input type="text" name="description" id="description"><br>
+        <input type="text" class="form-control" name="description" id="description"><br>
         <label for="cost">Price:</label>
         <input type="number" name="cost" id="cost"><br>
-        <input type="submit" value="Add">
+        <input type="submit" class="btn btn-primary btn-lg btn-block"  value="Add">
+    </div>
     </form>
+</div>
 
 </body>
 

@@ -27,8 +27,7 @@ def register(request):
     return redirect('/')
 
 def login(request):
-    print("POST payload inside login function", request.POST)
-    current_patron = Patron.objects.filter(email_address=request.POST['patron_email'])
+    current_patron = Patron.objects.filter(email=request.POST['patron_email'])
     errors = Patron.objects.validate_login(request.POST)
     if len(errors) > 0:
         for msg in errors.values():
@@ -36,7 +35,7 @@ def login(request):
         return redirect('/')
     if current_patron:
         if bcrypt.checkpw(request.POST['patron_password'].encode(), current_patron.first().password.encode()):
-            request.session['patron_id'] = current_patron[0].id
+            request.session['patron_id'] = current_patron.id
         messages.error(request, "This password doesn't match with the email you entered.")
         return('/')
     messages.error(request, "We don't recognize the email you entered.")
@@ -65,11 +64,6 @@ def patron_tab(request):
         'total': tab_total,
     }
     return render(request, 'patron_tab.html', context)
-
-
-# this function is a placeholder It did not exist and my make migrations was failing
-def pay_tab(request):
-    return redirect('/patron_tab')
 
 def logout(request):
     request.session.clear()

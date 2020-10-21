@@ -10,16 +10,35 @@
     <script src="://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <title>Document</title>
 </head>
-<body class = "p-3 mb-2 bg-warning text-dark">
-        <h2>All Employees</h2>
-    <a href="/bar/addemployee">Add a New Employee!</a>
-    <ul>
-    {% for employees in all_employees.all %}
-
-    <li>{{employees.id}}: {{employees.name}} Manager? {{employees.is_manager}}
-    <a href="/bar/drinks/delete/{{drinks.id}}">Delete</a>
-    </li>
-
-    {% endfor %}
+<body class = "p-3 mb-2 bg-light text-dark">
+    <div class="d-flex justify-content-between">
+        <h1 class="display-3">Employees</h1>
+        <div class="p-2"><a href="/bar/dashboard">Go Back</a>
+            <a href="/logout">Log Out</a></div>
+    </div>
+    <br>
+    <div class="d-flex justify-content-end">
+    <a href="/bar/addemployee" class="btn btn-secondary">Add a New Employee!</a></div>
+    <br>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Employee Name</th>
+                <th scope="col">Manager Authorization</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employees in all_employees.all %}
+            <tr>
+                <th scope="row">{{employees.id}}</th>
+                <td>{{employees.name}}</td>
+                <td>{{employees.is_manager}}</td>
+                <td><a href="/bar/employees/delete/{{employees.id}}">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
