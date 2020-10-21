@@ -10,33 +10,72 @@
     <script src="://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <title>Bartender Dashboard</title>
 </head>
-<body class = "p-3 mb-2 bg-warning text-dark">
+<body class = "p-3 mb-2 bg-light text-dark">
     <header>
-        <h3>Welcome {{bartender.name}}!</h3>
-        <div class="navigation">
-            <a href="">Switch Bartenders</a> | <a href="">Schedule</a> | <a href="">Cashout</a>
-            {%if bartender.is_manager%}
-            | <a href="">Some Manager Only Link</a>
-            {%endif%}
+        <div class="d-flex justify-content-between">
+            <h1 class="display-3">Welcome</h1><h4>{{bartender.name}}</h4>
+            <div class="p-2"><a href="/bar/dashboard">Go Back</a>
+                <a href="/logout">Log Out</a></div>
         </div>
+        <h3>Welcome {{employee.name}}!</h3>
+
+
+        
+        <div class="navigation">
+            <form action="switch_employee" method="post">
+                {%csrf_token%}
+                <select name="employee" id="employee">
+                    {%for employee in all_employees%}
+                    {%if employee.id in clocked_in and employee.id != bartender.id%}
+                    <option value="{{employee.id}}">{{employee.name}}</option>
+                    {%endif%}
+                    {%endfor%}
+                </select>
+                <input type="submit" value="Switch Bartender">
+            </form> | <a href="/bar">Clock In</a> | <a href="">Schedule</a> | <a href="/bar/cashout">Cashout</a>
+        </div>
+        {%if bartender.is_manager%}
+        <div class="navigation">
+            <a href="/bar/drinks">Drinks:</a>
+            <a href="/bar/employees">Employees:</a> 
+        </div>
+        {%endif%}
     </header>
-    <div class="example">
-        <h3>24 - Patron Name</h3>
+    {% if bartender.is_manager %}
+    {%for tab in all_tabs%}
+    <div class="table">
+        <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
         <ul>
-            <li>Whiskey - $3.00</li>
+        {%for drink in tab.drinks.all%}
+            <li>{{drink.name}} - {{drink.cost}}</li>
+        {%endfor%}
         </ul>
+        <p>Total = {{tab.total}}</p>
+        <a href="close_out/{{tab.id}}" class="button">Close Out</a><a href="edit/{{tab.id}}">Edit Tab</a></li>
     </div>
+    {%endfor%}
+    {%else%}
+    {%for tab in all_tabs%}
+    {%if tab.id in new_tabs%}
+    <div class="table">
+        <h3>New Tab!</h3>
+        <a href="pick_up/{{tab.id}}">Pick it Up</a>
+    </div>
+    {%endif%}
+    {%endfor%}
     {%for tab in bartender.open_tabs.all%}
     <div class="table">
         <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
         <ul>
         {%for drink in tab.drinks.all%}
-            <li>{{drink.name}} - {{drink.cost}} {%if bartender.is_manager%} <a href="">Delete</a></li>{%endif%}
+            <li>{{drink.name}} - {{drink.cost}}</li>
         {%endfor%}
         </ul>
         <p>Total = {{tab.total}}</p>
-        <a href="{{tab.id}}/close_out" class="button">Close Out</a>
+        <a href="close_out/{{tab.id}}" class="button">Close Out</a>
+        <a href="drop/{{tab.id}}">Drop Tab</a>
     </div>
     {%endfor%}
+    {%endif%}
 </body>
 </html>
