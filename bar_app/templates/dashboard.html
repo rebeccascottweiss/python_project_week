@@ -13,16 +13,16 @@
 <body class = "p-3 mb-2 bg-light text-dark">
     <header>
         <div class="d-flex justify-content-between">
-            <h1 class="display-3">Welcome</h1><h4>{{bartender.name}}</h4>
+            <h1 class="display-4">Welcome!</h1>
             <div class="p-2"><a href="/bar/dashboard">Go Back</a>
                 <a href="/logout">Log Out</a></div>
         </div>
-        <h3>Welcome {{employee.name}}!</h3>
+        <div class="d-flex justify-content-end">
+        <p>{{bartender.name}} is logged in</p></div>
 
-
-        
-        <div class="navigation">
-            <form action="switch_employee" method="post">
+        <div class="sidebar-sticky pt-3">
+            <ul class = "nav flex-column">
+                <form action="switch_employee" method="post">
                 {%csrf_token%}
                 <select name="employee" id="employee">
                     {%for employee in all_employees%}
@@ -33,6 +33,7 @@
                 </select>
                 <input type="submit" value="Switch Bartender">
             </form> | <a href="/bar">Clock In</a> | <a href="">Schedule</a> | <a href="/bar/cashout">Cashout</a>
+        </ul>
         </div>
         {%if bartender.is_manager%}
         <div class="navigation">
