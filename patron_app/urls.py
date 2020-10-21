@@ -15,4 +15,5 @@ urlpatterns = [
     path('tip_select', views.tip_select),
     path('return_home', views.return_home),
     path('logout', views.logout),
+    path('card_wallet', views.card_wallet),
 ]

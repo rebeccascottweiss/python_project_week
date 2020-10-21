@@ -26,15 +26,16 @@ def register(request):
         return redirect('/')
 
     stripe_customer = setup_stripe_customer()
-    print("This is the stripe customre: ",stripe_customer)
-    print("this is the stripe customr_id: ", stripe_customer['id'])
+    # print("This is the stripe customre: ",stripe_customer)
+    # print("this is the stripe customr_id: ", stripe_customer['id'])
 
     current_patron = Patron.objects.create(
         first_name = request.POST['first_name'],
         last_name = request.POST['last_name'],
         valid_to_drink = request.POST['valid_to_drink'],
         email_address = request.POST['email_address'],
-        password = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt()).decode()
+        password = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt()).decode(),
+        external_id = stripe_customer['id'],
     )
     request.session['patron_id'] = current_patron.id
     return redirect('/')
@@ -155,3 +156,12 @@ def stripe_start():
     )
     return return_val
 
+def card_wallet(request):
+    current_patron = Patron.objects.get(id=request.session['patron_id'])
+    intent = stripe.SetupIntent.create(
+    customer = current_patron.external_id
+    )
+    context = {
+        'client_secret' : intent.client_secret
+    }
+    return render(request,'card_wallet.html', context)
