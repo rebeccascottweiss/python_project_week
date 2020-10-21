@@ -10,9 +10,17 @@
     <script src="://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <title>Bartender Dashboard</title>
 </head>
-<body class = "p-3 mb-2 bg-warning text-dark">
+<body class = "p-3 mb-2 bg-light text-dark">
     <header>
-        <h3>Welcome {{bartender.name}}!</h3>
+        <div class="d-flex justify-content-between">
+            <h1 class="display-3">Welcome</h1><h4>{{bartender.name}}</h4>
+            <div class="p-2"><a href="/bar/dashboard">Go Back</a>
+                <a href="/logout">Log Out</a></div>
+        </div>
+        <h3>Welcome {{employee.name}}!</h3>
+
+
+        
         <div class="navigation">
             <form action="switch_employee" method="post">
                 {%csrf_token%}

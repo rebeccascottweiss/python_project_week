@@ -11,12 +11,12 @@ def home(request):
     return render(request, 'patron_home.html')
 
 def register(request):
-    errors = User.objects.validate_register(request.POST)
+    errors = Patron.objects.validate_register(request.POST)
     if len(errors) > 0:
         for msg in errors.values():
             messages.error(request, msg)
         return redirect('/')
-    current_patron = User.objects.create(
+    current_patron = Patron.objects.create(
         first_name = request.POST['first_name'],
         last_name = request.POST['last_name'],
         valid_to_drink = request.POST['valid_to_drink'],
@@ -27,8 +27,8 @@ def register(request):
     return redirect('/')
 
 def login(request):
-    current_patron = User.objects.filter(email=request.POST['patron_email'])
-    errors = User.objects.validate_login(request.POST)
+    current_patron = Patron.objects.filter(email=request.POST['patron_email'])
+    errors = Patron.objects.validate_login(request.POST)
     if len(errors) > 0:
         for msg in errors.values():
             messages.error(request, msg)

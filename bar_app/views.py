@@ -96,7 +96,6 @@ def addemployee(request):
     return render (request, 'addemployee.html')
 
 def adddrink(request):
-
     return render (request, 'adddrink.html')
 
 def newdrink(request):
@@ -108,10 +107,15 @@ def newdrink(request):
     )
     return redirect('/bar/drinks')
 
-def deletedrink(request,number):
-    delete_drink = Drink.objects.get(id = number)
-    delete_drink.delete()
+def removedrink(request,number):
+    remove_drink = Drink.objects.get(id = number)
+    remove_drink.delete()
     return redirect('/bar/drinks')
+
+def removeemployee(request,number):
+    remove_employee = Employee.objects.get(id = number)
+    remove_employee.delete()
+    return redirect('/bar/employees')
 
 def edit_tab(request, tab_id):
     context = {
@@ -138,6 +142,21 @@ def switch_employee(request):
     request.session['employee_id']=request.POST['employee']
     return redirect('/bar/dashboard')
 
+def editdrink(request,number):
+    context ={
+        'this_drink' : Drink.objects.get(id = number)
+    }
+    return render (request, 'editdrink.html', context)
+
+
+def updatedrink(request,number):
+    edit_drink = Drink.objects.get(id = number)
+    edit_drink.name = request.POST['name']
+    edit_drink.description = request.POST ['description']
+    edit_drink.cost = request.POST['cost']
+    edit_drink.save()
+    return redirect ('/bar/drinks')
+
 def pick_up(request, tab_id):
     bartender = Employee.objects.get(id=request.session['employee_id'])
     tab = Tab.objects.get(id=tab_id)
@@ -149,3 +168,4 @@ def drop(request, tab_id):
     tab = Tab.objects.get(id=tab_id)
     tab.bartender.remove(bartender)
     return redirect('/bar/dashboard')
+
