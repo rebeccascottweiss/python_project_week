@@ -22,6 +22,7 @@ class Identification(models.Model):
 class Validation(models.Manager):
     def validate_register(self, postData):
         errors = {}
+        birthday_test = datetime.strptime(today, '%Y-%d-%m') - datetime.strptime(form_data['birthday'], '%Y-%d-%m')
         Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         Name_REGEX = re.compile(r'^[a-zA-Z]+$')
         Password_REGEX = re.compile(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.;:<>?/~_+-=\|])')
@@ -46,6 +47,9 @@ class Validation(models.Manager):
             errors['pw_chars'] = "Your password must contain: one lowercase letter, one uppercase letter, one number and one special character."
         if postData['password'] != postData['confirm_pw']:
             errors['match_pw'] = "Your passwords must match!"
+        if  birthday_test.days/365 < 21:
+        errors['min_age'] = "You must be at least 21 years old to register."
+
         # leaving this here to help with age greater than 21 validation
         # if datetime.strptime(postData['b_day'], '%Y-%m-%d') > datetime.now():
         #     errors['b_day'] = "Your birthday must be in the past."
