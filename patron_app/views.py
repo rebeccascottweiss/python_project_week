@@ -4,6 +4,11 @@ from .models import Patron
 from bar_app.models import Tab
 import bcrypt
 import stripe
+stripe.api_key = "sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q"
+
+def setup_stripe_customer():
+    return stripe.Customer.create()
+
 # Create your views here.
 def home(request):
     if 'patron_id' not in request.session:
@@ -19,6 +24,11 @@ def register(request):
         for msg in errors.values():
             messages.error(request, msg)
         return redirect('/')
+
+    stripe_customer = setup_stripe_customer()
+    print("This is the stripe customre: ",stripe_customer)
+    print("this is the stripe customr_id: ", stripe_customer['id'])
+
     current_patron = Patron.objects.create(
         first_name = request.POST['first_name'],
         last_name = request.POST['last_name'],
@@ -138,10 +148,10 @@ def logout(request):
     return redirect('/')
 
 def stripe_start():
-    stripe.api_key = "sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q"
     return_val = stripe.PaymentIntent.create(
         amount=100,
         currency="usd",
         payment_method_types=["card"],
     )
     return return_val
+
