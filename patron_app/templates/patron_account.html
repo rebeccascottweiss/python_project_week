@@ -31,5 +31,17 @@
         <input type="submit" value="Update Info">
         </div>
     </form>
+    <div>
+        <h2>Account History</h2>
+        <h3>Your Tabs</h3>
+        <!-- put this in a overflow style container -->
+        {% for tab in patron.tabs.all reversed %}
+            <p>{{tab.updated_at}} - {{tab.total}}</p>
+            <!-- Maybe make it to where by clicking on the order total/updated at area this would expand out to display all the drinks? -->
+            {% for drink in tab.drinks.all reversed %}
+                <p>{{drink.name}} - {{drink.cost}}</p>
+            {% endfor %}
+        {% endfor %}
+    </div>
 </body>
 </html>

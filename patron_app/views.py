@@ -78,11 +78,16 @@ def add_payment(request):
 def patron_tab(request):
     patron = Patron.objects.get(id=request.session['patron_id'])
     # make a total in session to allow for better transfer of data on the backend?
+    current_tab = patron.tabs.last()
+    if len(current_tab.drinks.all()) > 0:
+        current_tab.total = 0
+        for drink in current_tab.drinks.all():
+            current_tab.total += drink.cost
+        current_tab.save()
     context = {
         'patron': patron,
+        'current_tab': current_tab,
     }
-    # if 'drinks' in patron.tabs.last():
-    #     context['total'] = sum(patron.tabs.last().drinks.all().cost)
     return render(request, 'patron_tab.html', context)
 
 #should this come after selecting tip?
