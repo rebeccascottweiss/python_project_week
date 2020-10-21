@@ -29,12 +29,11 @@
     </header>
     <a href="/pay_tab">Pay my tab</a>
     <div class="container">
-        {% for drink in patron.tabs.drinks.all %}
-        <p>{{drink.name}}</p>
-        <p>{{drink.cost}}</p>
+        {% for drink in current_tab.drinks.all %}
+            <p>{{drink.name}} - {{drink.cost}}</p>
         {% endfor %}
         <!--Total for current tab-->
-        <p>{{total}}</p>
+        <p>Subtotal: {{current_tab.total}}</p>
     </div>
 </body>
 

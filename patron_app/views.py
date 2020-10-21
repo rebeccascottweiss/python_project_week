@@ -3,6 +3,7 @@ from django.contrib import messages
 from .models import Patron
 from bar_app.models import Tab
 import bcrypt
+import stripe
 
 # Create your views here.
 def home(request):
@@ -78,16 +79,22 @@ def add_payment(request):
 def patron_tab(request):
     patron = Patron.objects.get(id=request.session['patron_id'])
     # make a total in session to allow for better transfer of data on the backend?
+    current_tab = patron.tabs.last()
+    if len(current_tab.drinks.all()) > 0:
+        current_tab.total = 0
+        for drink in current_tab.drinks.all():
+            current_tab.total += drink.cost
+        current_tab.save()
     context = {
         'patron': patron,
+        'current_tab': current_tab,
     }
-    # if 'drinks' in patron.tabs.last():
-    #     context['total'] = sum(patron.tabs.last().drinks.all().cost)
     return render(request, 'patron_tab.html', context)
 
 #should this come after selecting tip?
 def pay_tab(request):
     #process payment info
+    #print(stripe_trial)
     return redirect('/tab_receipt')
 
 def tab_receipt(request):
@@ -123,4 +130,15 @@ def return_home(request):
 
 def logout(request):
     request.session.clear()
+    return redirect('/')
+
+def stripe_trial(request):
+    stripe.api_key = "sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q"
+
+    return_val = stripe.PaymentIntent.create(
+        amount=2000,
+        currency="usd",
+        payment_method_types=["card"],
+    )
+    print(return_val)
     return redirect('/')
