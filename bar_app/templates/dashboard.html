@@ -17,8 +17,9 @@
         integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous">
     </script>
     <title>Bartender Dashboard</title>
-
+</head>
 <body class="p-3 mb-2 bg-light text-dark">
+    <header>
     <div class="d-flex justify-content-between">
         <h1 class="display-4">Welcome!</h1>
         <div class="p-2"><a href="/bar/dashboard">Go Back</a>
@@ -27,80 +28,81 @@
     <div class="d-flex justify-content-end">
         <p>{{bartender.name}} is logged in</p>
     </div>
-            <div class="d-inline-flex justify-content-start">
-                <div class="sidebar-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <form action="switch_employee" method="post">
-                                {%csrf_token%}
-                                <select name="employee" id="employee">
-                                    {%for employee in all_employees%}
-                                    {%if employee.id in clocked_in and employee.id != bartender.id%}
-                                    <option value="{{employee.id}}">{{employee.name}}</option>
-                                    {%endif%}
-                                    {%endfor%}
-                                </select>
-                                <input type="submit" value="Switch Bartender">
-                            </form>
-                        </li><br>
-                        <h6 class='text-muted'>Employees</h6>
-                        <li class="nav-item"><a href="/bar" class="nav-link active">Clock In</a> </li>
-                        <li class="nav-item"><a href="" class="nav-link active">Schedule</a> </li>
-                        <li class="nav-item"><a href="/bar/cashout" class="nav-link active">Cashout</a></li>
-                    </ul>
-                    {%if bartender.is_manager%}
-                    <h6 class='text-muted'>Managers Only</h6>
-                    <ul class="nav flex-column">
-                        <li class="nav-item"></li>
-                        <li class="nav-item"><a href="/bar/drinks" class="nav-link active">Drinks</a></li>
-                        <li class="nav-item"><a href="/bar/employees" class="nav-link active">Employees</a></li>
-                    </ul>
-                    {%endif%}
-                </div>
-            </div>
-                <h4 class="d-flex justify-content-center">Active / Open Tabs</h4>
-                {% if bartender.is_manager %}
-                {%for tab in all_tabs%}
+    </header>
+    <div class="d-inline-flex justify-content-start">
+        <div class="sidebar-sticky pt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <form action="switch_employee" method="post">
+                        {%csrf_token%}
+                        <select name="employee" id="employee">
+                            {%for employee in all_employees%}
+                            {%if employee.id in clocked_in and employee.id != bartender.id%}
+                            <option value="{{employee.id}}">{{employee.name}}</option>
+                            {%endif%}
+                            {%endfor%}
+                        </select>
+                        <input type="submit" value="Switch Bartender">
+                    </form>
+                </li><br>
+                <h6 class='text-muted'>Employees</h6>
+                <li class="nav-item"><a href="/bar" class="nav-link active">Clock In</a> </li>
+                <li class="nav-item"><a href="" class="nav-link active">Schedule</a> </li>
+                <li class="nav-item"><a href="/bar/cashout" class="nav-link active">Cashout</a></li>
+            </ul>
+            {%if bartender.is_manager%}
+            <h6 class='text-muted'>Managers Only</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item"></li>
+                <li class="nav-item"><a href="/bar/drinks" class="nav-link active">Drinks</a></li>
+                <li class="nav-item"><a href="/bar/employees" class="nav-link active">Employees</a></li>
+            </ul>
+            {%endif%}
+        </div>
+        <div class="d-flex flex-column justify-content-center">
+            <h4 class="d-flex justify-content-center">Active / Open Tabs</h4>
+        {% if bartender.is_manager %}
+            {%for tab in all_tabs%}
+            <div class="d-flex flex-row bd-highlight mb-3">
                 <div class="p-2 bd-highlight">
-
                     <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
                     <ul>
-                        {%for drink in tab.drinks.all%}
+                        {%for drink in tab.line_items.all%}
                         <li>{{drink.name}} - {{drink.cost}}</li>
                         {%endfor%}
                     </ul>
                     <p>Total = {{tab.total}}</p>
-                    <a href="close_out/{{tab.id}}" class="button">Close Out</a><a href="edit/{{tab.id}}">Edit
-                        Tab</a></li>
-
-                    {%endfor%}
-                    {%else%}
-                    {%for tab in all_tabs%}
-                    {%if tab.id in new_tabs%}
-                    <div class="table">
-                        <h3>New Tab!</h3>
-                        <a href="pick_up/{{tab.id}}">Pick it Up</a>
-                    </div>
-                    {%endif%}
-                    {%endfor%}
-                    {%for tab in bartender.open_tabs.all%}
-                    <div class="table">
-                        <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
-                        <ul>
-                            {%for drink in tab.drinks.all%}
-                            <li>{{drink.name}} - {{drink.cost}}</li>
-                            {%endfor%}
-                        </ul>
-                        <p>Total = {{tab.total}}</p>
-                        <a href="close_out/{{tab.id}}" class="button">Close Out</a>
-                        <a href="drop/{{tab.id}}">Drop Tab</a>
-                        {%endfor%}
-                        {%endif%}
-                    </div>
+                    <a href="close_out/{{tab.id}}" class="button">Close Out |</a><a href="edit/{{tab.id}}"> Edit Tab</a></li>
                 </div>
+            {%endfor%}
+        {%else%}
+            {%for tab in all_tabs%}
+            {%if tab.id in new_tabs%}
+                <div class="d-flex flex-row bd-highlight mb-3">
+                    <h3>New Tab!</h3>
+                    <a href="pick_up/{{tab.id}}">Pick it Up</a>
+                </div>
+            {%endif%}
+            {%endfor%}
+            {%for tab in bartender.open_tabs.all%}
+                <div class="table">
+                    <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
+                    <ul>
+                        {%for drink in tab.line_items.all%}
+                        <li>{{drink.name}} - {{drink.cost}}</li>
+                        {%endfor%}
+                    </ul>
+                    <p>Total = {{tab.total}}</p>
+                    <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}">Drop Tab |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
+                </div>
+            {%endfor%}
             </div>
         </div>
 
+        {%endif%}
+        </div>
+    </div>
+        
 </body>
 
 </html>

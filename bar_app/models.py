@@ -48,15 +48,21 @@ class Employee(models.Model):
     #Took out the tips field - Save tips in Session? 
     #because they change and would be reset with each shift? 
 
+
 class Tab(models.Model):
     patron = models.ForeignKey(Patron, related_name='tabs', on_delete=models.CASCADE)
     bartender = models.ManyToManyField(Employee, related_name='open_tabs')
     drinks = models.ManyToManyField(Drink, related_name='patron_tabs')
     payment_reference = models.CharField(max_length=500, null=True)
-    receipt = {}
-    total = models.IntegerField(null=True)
+    total = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     #Took out "Tab Num" - can be interchangable with ID
+
+class LineItem(models.Model):
+    tab = models.ForeignKey(Tab, related_name='line_items', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    cost = models.IntegerField()
+
 
 

@@ -64,10 +64,11 @@
             <h2>Edit Tab #{{tab.id}}</h2>
             <h5>Add Drink</h5>
             <ul>
-                {%for drink in tab.drinks.all%}
-                <li>{{drink.name}} - ${{drink.cost}} {%if bartender.is_manager%}<a
-                        href="/bar/delete_drink/{{tab.id}}/{{drink.id}}">Delete</a>{%endif%}</li>
-                {%endfor%}
+            {%for drink in tab.line_items.all%}
+                <li>{{drink.name}} - {{drink.cost}}</li>
+            {%endfor%}
+            </ul>
+            <p>Total = {{tab.total}}</p>
             </ul>
             <form action="/bar/adddrink/{{tab.id}}" method="post">
                 {%csrf_token%}
