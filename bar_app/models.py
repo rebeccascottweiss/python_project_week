@@ -53,7 +53,10 @@ class Tab(models.Model):
     bartender = models.ManyToManyField(Employee, related_name='open_tabs')
     drinks = models.ManyToManyField(Drink, related_name='patron_tabs')
     payment_reference = models.CharField(max_length=500, null=True)
+    receipt = {}
     total = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     #Took out "Tab Num" - can be interchangable with ID
+
+
