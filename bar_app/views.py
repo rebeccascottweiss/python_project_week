@@ -73,7 +73,7 @@ def dashboard(request):
             new_tabs.append(tab.id)        
     context = {
         'bartender': Employee.objects.get(id = request.session['employee_id']),
-        'all_tabs': Tab.objects.all(),
+        'all_tabs': Tab.objects.exclude(payment_reference = "123456789"),
         'all_employees': Employee.objects.all(),
         'clocked_in': request.session['clocked_in'],
         'new_tabs' : new_tabs,
@@ -83,7 +83,11 @@ def dashboard(request):
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
-    #payment methodology goes here somewhere. Should there be a rendered html with ways to close out? 
+    this_tab = Tab.objects.get(id=tab_id)
+    this_tab.payment_reference = "123456789"
+    this_tab.save()
+    print(this_tab.payment_reference)
+    filtertabs = Tab.objects.filter
     return redirect('/bar/dashboard')
 
 def drinks(request):
