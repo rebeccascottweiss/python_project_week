@@ -20,20 +20,22 @@
 </head>
 
 <body>
-    <header>
-        <h3>{{patron.first_name}}</h3>
-        <nav>
-            <a href="/patron/account">Account</a>
-            <a href="/logout">Logout</a>
-        </nav>
-    </header>
-    <a href="/pay_tab">Pay my tab</a>
-    <div class="container">
-        {% for drink in current_tab.drinks.all %}
+    <div class="d-flex justify-content-between">
+        <h1 class="display-6">Hello {{patron.first_name}}!</h1>
+        <div class="p-2">
+            <a href="/patron/account" class="btn btn-secondary">Account</a>
+            <a href="/logout" class="btn btn-secondary">Logout</a></div>
+    </div>
+    <br>
+    <br>
+    <div class="justify-content-center">
+        <a href="/pay_tab" class="btn btn-secondary">Pay my tab</a>
+        <br>
+            {% for drink in current_tab.drinks.all %}
             <p>{{drink.name}} - {{drink.cost}}</p>
-        {% endfor %}
-        <!--Total for current tab-->
-        <p>Subtotal: {{current_tab.total}}</p>
+            {% endfor %}
+            <!--Total for current tab-->
+            <p>Subtotal: {{current_tab.total}}</p>
     </div>
 </body>
 
