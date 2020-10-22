@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
-from .models import Employee, Bar, Drink, Tab
+from .models import Employee, Bar, Drink, Tab, LineItem
 import bcrypt
 
 
@@ -10,10 +10,7 @@ def index(request):
         request.session['clocked_in'] = []
     context = {
         "all_employees": Employee.objects.all(),
-    }
-    print(request.session['clocked_in'])
-    if 'receipts' not in request.session:
-        request.session['receipts'] = {}
+    }    
     return render(request, 'index.html',context)
 
 def register(request):
@@ -77,19 +74,21 @@ def dashboard(request):
             new_tabs.append(tab.id)        
     context = {
         'bartender': Employee.objects.get(id = request.session['employee_id']),
-        'all_tabs': Tab.objects.all(),
+        'all_tabs': Tab.objects.exclude(payment_reference = "123456789"),
         'all_employees': Employee.objects.all(),
         'clocked_in': request.session['clocked_in'],
         'new_tabs' : new_tabs,
-        'receipts': request.session['receipts'],
     }
-    print("I'm rendering dashboard. This is my dictionary of receipts:", request.session['receipts'])
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
-    if 'employee_id' not in request.session:
+if 'employee_id' not in request.session:
         return redirect('/bar')
-    #payment methodology goes here somewhere. Should there be a rendered html with ways to close out? 
+    this_tab = Tab.objects.get(id=tab_id)
+    this_tab.payment_reference = "123456789"
+    this_tab.save()
+    print(this_tab.payment_reference)
+    filtertabs = Tab.objects.filter
     return redirect('/bar/dashboard')
 
 def drinks(request):
@@ -147,7 +146,9 @@ def edit_tab(request, tab_id):
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
         return redirect('/dashboard')
     context = {
-        'bartender': Employee.objects.get(id=request.session['employee_id']), 
+        'bartender': Employee.objects.get(id = request.session['employee_id']),
+        'all_employees': Employee.objects.all(),
+        'clocked_in': request.session['clocked_in'],
         'tab': Tab.objects.get(id=tab_id),
         'drinks': Drink.objects.all(),
     }
@@ -168,11 +169,14 @@ def add_order(request, tab_id):
     tab = Tab.objects.get(id=tab_id)
     drink = Drink.objects.get(id=request.POST['drink'])
     tab.drinks.add(drink)
-    print(request.session['receipts'])
-    # if drink.name in request.session['receipts'][tab_id]:
-    #     request.session['receipts'][tab_id][drink.name] += 1
-    # else:
-    #     request.session['receipts'][tab_id][drink.name] = 1
+    LineItem.objects.create(
+        tab=tab,
+        name=drink.name,
+        cost=drink.cost,
+    )
+    tab.total += drink.cost
+    tab.save()
+    print(LineItem.objects.last())
     return redirect(f'/bar/edit/{tab_id}')
 
 def switch_employee(request):
@@ -206,10 +210,6 @@ def pick_up(request, tab_id):
     bartender = Employee.objects.get(id=request.session['employee_id'])
     tab = Tab.objects.get(id=tab_id)
     tab.bartender.add(bartender)
-    if tab_id not in request.session['receipts']:
-        request.session['receipts'][tab_id] = {}
-        request.session.save()
-    print("I'm in the pick up function. This is my dictionary of receipts:", request.session['receipts'])
     return redirect('/bar/dashboard')
 
 def drop(request, tab_id):

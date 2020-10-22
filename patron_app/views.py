@@ -92,6 +92,7 @@ def start_tab(request):
     # because it is a class instance we can just do .id
     print(request.session['start'].id)
     # determine what to do with payment id
+    #when stripe is implemented this can be changed to: if Patron.objects.get(id=request.session).external_id = "": 
     if 'payment_info_collected' not in request.session:
         context = {
             'patron': Patron.objects.get(id=request.session['patron_id'])
@@ -213,18 +214,6 @@ def logout(request):
     request.session.clear()
     return redirect('/')
 
-
-def stripe_start():
-    if 'patron_id' not in request.session:
-        return redirect('/')
-    return_val = stripe.PaymentIntent.create(
-        amount=100,
-        currency="usd",
-        payment_method_types=["card"],
-    )
-    return return_val
-
-
 def card_wallet(request):
     if 'patron_id' not in request.session:
         return redirect('/')
@@ -236,3 +225,12 @@ def card_wallet(request):
         'client_secret': intent.client_secret
     }
     return render(request, 'card_wallet.html', context)
+
+############# Functions ##############
+def stripe_start():
+    return_val = stripe.PaymentIntent.create(
+        amount=100,
+        currency="usd",
+        payment_method_types=["card"],
+    )
+    return return_val
