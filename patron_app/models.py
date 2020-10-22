@@ -50,7 +50,32 @@ class Validation(models.Manager):
         # if datetime.strptime(postData['b_day'], '%Y-%m-%d') > datetime.now():
         #     errors['b_day'] = "Your birthday must be in the past."
         return errors
-        
+
+    def validate_update(self, postData, current_patron):
+        errors = {}
+        Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+        Name_REGEX = re.compile(r'^[a-zA-Z]+$')
+        Password_REGEX = re.compile(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.;:<>?/~_+-=\|])')
+        # check to make sure name is longer than 2 chars
+        if len(postData['first_name']) < 2:
+            errors['first_name'] = "Your first name must be longer than 2 letters."
+        if len(postData['last_name']) < 2:
+            errors['last_name'] = "Your last name must be longer than 2 letters."
+        # add in check to make sure all letters
+        if not Name_REGEX.match(postData['first_name']) or not Name_REGEX.match(postData['last_name']):
+            errors['first_name_alph'] = "Your name must only contain letters."
+        # check if email is valid email format
+        if not Email_REGEX.match(postData['email_address']):
+            errors['email_address'] = "You must enter a valid email address."
+        # is the user changing their email? if not dont compare to existing emails.
+        if current_patron.email_address != postData['email_address']:
+            # check to see if someone already has this email
+            for patron in Patron.objects.all():
+                if patron.email_address == postData['email_address']:
+                    errors['dup_email'] = "That email is already registered. Try logging in."
+        return errors
+
+
     def validate_login(self, postData):
         patron = Patron.objects.filter(email_address=postData['patron_email'])
         Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
