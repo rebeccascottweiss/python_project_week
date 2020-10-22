@@ -18,16 +18,15 @@
     <title>BarTab</title>
 </head>
 <body class="p-3 mb-2 bg-light text-dark">
-    <header>
-        <h3>{{patron.first_name}}</h3>
-        <nav>
-            <a href="/patron/account">Account</a>
-            <a href="/logout">Logout</a>
-        </nav>
-    </header>
+    <div class="d-flex justify-content-between">
+        <h1 class="display-6">Hello {{patron.first_name}}!</h1>
+        <div class="p-2">
+            <a href="/patron/account" class="btn btn-secondary">Account</a>
+            <a href="/logout" class="btn btn-secondary">Logout</a></div>
+    </div>
     <div>
-        <h1>Thank You!</h1>
-        <h3>Would you like to add a tip?</h3>
+        <h5>Thank You!</h5>
+        <h5>Would you like to add a tip?</h5>
         <form action="/tip_select" method="POST">
             {% csrf_token %}
             <input type="radio" id="zero" name="tip" value="0">
@@ -42,7 +41,7 @@
             <label for="twenty-five">25%</label>
             <label for="other">Other:</label>
             <input type="number" id="other" name="other_tip">
-            <input type="submit" value="Select">
+            <input type="submit" value="Select" class="btn btn-success">
         </form>
         <!-- Potential place for lyft/uber link -->
     </div>

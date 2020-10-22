@@ -15,32 +15,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
         integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous">
     </script>
-    <title>Account</title>
+    <title>Pay My Tab Account</title>
 </head>
 <body class="p-3 mb-2 bg-light text-dark">
-    <header>
-        <h3>{{patron.first_name}}</h3>
-        <nav>
-            <a href="/patron/account">Account</a>
-            <a href="/return_home">Return to Home</a>
-            <a href="/logout">Logout</a>
-        </nav>
-    </header>
-    <form action="/patron/update_info" method="POST">
+    <div class="d-flex justify-content-between">
+        <h1 class="display-6">Hello {{patron.first_name}}!</h1>
+        <div class="p-2">
+            <a href="/return_home" class = "btn btn-secondary">Return to Home</a>
+            <a href="/logout" class="btn btn-secondary">Logout</a></div>
+    </div>
+    <form action="/patron/update_info" method="POST" class="form-group">
         {% csrf_token %}
         <label for="first_name">First Name:</label>
-        <input type="text" name="first_name" id="first_name" value="{{patron.first_name}}">
+        <input type="text" name="first_name" id="first_name" value="{{patron.first_name}}" class="form-control" >
         <label for="last_name">Last Name:</label>
-        <input type="text" name="last_name" id="last_name" value="{{patron.last_name}}">
+        <input type="text" name="last_name" id="last_name" value="{{patron.last_name}}" class="form-control" >
         <!-- took out valid to drink, this would be changed by age, not by user -->
         <label for="email_address">Email:</label>
-        <input type="text" name="email_address" id="email_address" value="{{patron.email_address}}">
+        <input type="text" name="email_address" id="email_address" value="{{patron.email_address}}" class="form-control" >
         <!-- Put Password behind a separate page, maybe use jquery? -->
         <!-- <label for="password">Password:</label>
         <input type="password" name="password" id="password">
         <label for="confirm_pw">Confirm PW:</label>
         <input type="password" name="confirm_pw" id="confirm_pw"> -->
-        <input type="submit" value="Update Info">
+        <input type="submit" value="Update Info" class = "btn btn-primary">
         </div>
     </form>
     {% if messages %}
@@ -51,8 +49,8 @@
         </ul>
         {% endif %}
     <div>
-        <h2>Account History</h2>
-        <h3>Your Tabs</h3>
+        <h3>Account History</h3>
+        <h4>Your Tabs</h4>
         <!-- put this in a overflow style container -->
         {% for tab in patron.tabs.all reversed %}
             <p>{{tab.updated_at}} - {{tab.total}}</p>
