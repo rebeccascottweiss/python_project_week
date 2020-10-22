@@ -48,7 +48,7 @@
                 <th scope="row">{{drinks.id}}</th>
                 <td>{{drinks.name}}</td>
                 <td>{{drinks.description}}</td>
-                <td>${{drink.cost|div:100|floatformat:2}}</td>
+                <td>${{drinks.cost|div:100|floatformat:2}}</td>
                 <td><a href="/bar/drinks/edit/{{drinks.id}}">Edit</a>
                     <a href="/bar/drinks/remove/{{drinks.id}}">Delete</a></td>
             </tr>
