@@ -79,6 +79,15 @@ class Validation(models.Manager):
                 if patron.email_address == postData['email_address']:
                     errors['dup_email'] = "That email is already registered. Try logging in."
         return errors
+    
+    def validate_password_update(self, postData):
+        errors = {}
+        Password_REGEX = re.compile(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.;:<>?/~_+-=\|])')
+        if not Password_REGEX.match(postData['password_new']):
+            errors['pw_chars'] = "Your password must contain: one lowercase letter, one uppercase letter, one number and one special character."
+        if postData['password_new'] != postData['password_new_conf']:
+            errors['match_pw'] = "Your passwords must match!"
+        return errors
 
 
     def validate_login(self, postData):
@@ -97,7 +106,7 @@ class Patron(models.Model):
     valid_to_drink = models.BooleanField()
     email_address = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
-    external_id = models.CharField(max_length=255, default="")
+    #external_id = models.CharField(max_length=255, default="")
     #identification = models.ForeignKey(Identification, related_name="users", on_delete=models.CASCADE)
     #payments = models.ForeignKey(Payment, related_name="users", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
