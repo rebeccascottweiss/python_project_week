@@ -12,6 +12,8 @@ def index(request):
         "all_employees": Employee.objects.all(),
     }
     print(request.session['clocked_in'])
+    if 'receipts' not in request.session:
+        request.session['receipts'] = {}
     return render(request, 'index.html',context)
 
 def register(request):
@@ -63,7 +65,6 @@ def cashout(request):
 
 
 def dashboard(request):
-    print(Tab.objects.all())
     if 'employee_id' not in request.session:
         return redirect ('/bar')
     new_tabs = []
@@ -76,8 +77,9 @@ def dashboard(request):
         'all_employees': Employee.objects.all(),
         'clocked_in': request.session['clocked_in'],
         'new_tabs' : new_tabs,
+        'receipts': request.session['receipts'],
     }
-    print(context)
+    print("I'm rendering dashboard. This is my dictionary of receipts:", request.session['receipts'])
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
@@ -140,6 +142,11 @@ def add_order(request, tab_id):
     tab = Tab.objects.get(id=tab_id)
     drink = Drink.objects.get(id=request.POST['drink'])
     tab.drinks.add(drink)
+    print(request.session['receipts'])
+    # if drink.name in request.session['receipts'][tab_id]:
+    #     request.session['receipts'][tab_id][drink.name] += 1
+    # else:
+    #     request.session['receipts'][tab_id][drink.name] = 1
     return redirect(f'/bar/edit/{tab_id}')
 
 def switch_employee(request):
@@ -165,6 +172,10 @@ def pick_up(request, tab_id):
     bartender = Employee.objects.get(id=request.session['employee_id'])
     tab = Tab.objects.get(id=tab_id)
     tab.bartender.add(bartender)
+    if tab_id not in request.session['receipts']:
+        request.session['receipts'][tab_id] = {}
+        request.session.save()
+    print("I'm in the pick up function. This is my dictionary of receipts:", request.session['receipts'])
     return redirect('/bar/dashboard')
 
 def drop(request, tab_id):
