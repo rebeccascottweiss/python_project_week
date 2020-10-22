@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bar_app',
     'patron_app',
+    # added this line for template math
+    'mathfilters',
 ]
 
 MIDDLEWARE = [
