@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date
+from datetime import date, datetime
 import re
 # Create your models here.
 
@@ -22,7 +22,8 @@ class Identification(models.Model):
 class Validation(models.Manager):
     def validate_register(self, postData):
         errors = {}
-        birthday_test = datetime.strptime(today, '%Y-%d-%m') - datetime.strptime(form_data['birthday'], '%Y-%d-%m')
+        today = date.today().strftime('%Y-%m-%d')
+        birthday_test = datetime.strptime(today, '%Y-%m-%d') - datetime.strptime(postData['birthday'], '%Y-%m-%d')
         Email_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         Name_REGEX = re.compile(r'^[a-zA-Z]+$')
         Password_REGEX = re.compile(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.;:<>?/~_+-=\|])')

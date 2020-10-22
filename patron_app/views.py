@@ -32,7 +32,7 @@ def register(request):
     current_patron = Patron.objects.create(
         first_name = request.POST['first_name'],
         last_name = request.POST['last_name'],
-        valid_to_drink = request.POST['valid_to_drink'],
+        valid_to_drink = 'True',
         email_address = request.POST['email_address'],
         password = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt()).decode(),
         external_id = stripe_customer['id'],
