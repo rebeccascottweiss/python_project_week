@@ -76,6 +76,7 @@ def update_info(request):
     current_patron.last_name = request.POST['last_name']
     current_patron.email_address = request.POST['email_address']
     current_patron.save()
+    messages.success(request, "Your account info has been updated!")
     return redirect('/patron/account')
 
 
@@ -179,7 +180,7 @@ def password_change(request):
     if bcrypt.checkpw(request.POST['password_old'].encode(), current_patron.password.encode()) and request.POST['password_new'] == request.POST['password_new_conf']:
         current_patron.password = bcrypt.hashpw(request.POST['password_new'].encode(), bcrypt.gensalt()).decode()
         current_patron.save()
-        messages.success(request, "Your password has been updated")
+        messages.success(request, "Your password has been updated!")
         return redirect('/patron/account')
     messages.error(request, "This password doesn't match with the email you entered.")
     return redirect('/patron/password_update')
