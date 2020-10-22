@@ -48,7 +48,7 @@ class Validation(models.Manager):
         if postData['password'] != postData['confirm_pw']:
             errors['match_pw'] = "Your passwords must match!"
         if  birthday_test.days/365 < 21:
-        errors['min_age'] = "You must be at least 21 years old to register."
+            errors['min_age'] = "You must be at least 21 years old to register."
 
         # leaving this here to help with age greater than 21 validation
         # if datetime.strptime(postData['b_day'], '%Y-%m-%d') > datetime.now():
