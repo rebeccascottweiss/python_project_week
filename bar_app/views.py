@@ -56,6 +56,8 @@ def logout(request):
 
 
 def cashout(request):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     employee = Employee.objects.get(id=request.session['employee_id'])
     cash_out = request.session.pop('employee_id')
     request.session['clocked_in'].remove(employee.id)
@@ -81,28 +83,40 @@ def dashboard(request):
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     #payment methodology goes here somewhere. Should there be a rendered html with ways to close out? 
     return redirect('/bar/dashboard')
 
 def drinks(request):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     context = {
         'all_drinks' : Drink.objects.all()
     }
     return render(request, 'drinks.html', context)
 
 def employees(request):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     context = {
         'all_employees' : Employee.objects.all()
     }
     return render (request, 'employees.html', context)
 
 def addemployee(request):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     return render (request, 'addemployee.html')
 
 def adddrink(request):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     return render (request, 'adddrink.html')
 
 def newdrink(request):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     print(request.POST)
     drink = Drink.objects.create(
         name = request.POST['name'],
@@ -112,16 +126,22 @@ def newdrink(request):
     return redirect('/bar/drinks')
 
 def removedrink(request,number):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     remove_drink = Drink.objects.get(id = number)
     remove_drink.delete()
     return redirect('/bar/drinks')
 
 def removeemployee(request,number):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     remove_employee = Employee.objects.get(id = number)
     remove_employee.delete()
     return redirect('/bar/employees')
 
 def edit_tab(request, tab_id):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     context = {
         'bartender': Employee.objects.get(id=request.session['employee_id']), 
         'tab': Tab.objects.get(id=tab_id),
@@ -131,22 +151,30 @@ def edit_tab(request, tab_id):
 
 
 def delete_drink(request, tab_id, drink_id):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     tab = Tab.objects.get(id=tab_id)
     drink = Drink.objects.get(id=drink_id)
     tab.drinks.remove(drink)
     return redirect(f'/bar/edit/{tab_id}')
 
 def add_order(request, tab_id):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     tab = Tab.objects.get(id=tab_id)
     drink = Drink.objects.get(id=request.POST['drink'])
     tab.drinks.add(drink)
     return redirect(f'/bar/edit/{tab_id}')
 
 def switch_employee(request):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     request.session['employee_id']=request.POST['employee']
     return redirect('/bar/dashboard')
 
 def editdrink(request,number):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     context ={
         'this_drink' : Drink.objects.get(id = number)
     }
@@ -154,6 +182,8 @@ def editdrink(request,number):
 
 
 def updatedrink(request,number):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     edit_drink = Drink.objects.get(id = number)
     edit_drink.name = request.POST['name']
     edit_drink.description = request.POST ['description']
@@ -162,12 +192,16 @@ def updatedrink(request,number):
     return redirect ('/bar/drinks')
 
 def pick_up(request, tab_id):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     bartender = Employee.objects.get(id=request.session['employee_id'])
     tab = Tab.objects.get(id=tab_id)
     tab.bartender.add(bartender)
     return redirect('/bar/dashboard')
 
 def drop(request, tab_id):
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     bartender = Employee.objects.get(id=request.session['employee_id'])
     tab = Tab.objects.get(id=tab_id)
     tab.bartender.remove(bartender)

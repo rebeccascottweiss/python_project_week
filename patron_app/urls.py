@@ -12,6 +12,8 @@ urlpatterns = [
     path('tab_receipt', views.tab_receipt),
     path('patron/account', views.account),
     path('patron/update_info', views.update_info),
+    path('patron/password_update', views.password_update),
+    path('patron/password_change', views.password_change),
     path('tip_select', views.tip_select),
     path('return_home', views.return_home),
     path('logout', views.logout),
