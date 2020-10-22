@@ -77,13 +77,6 @@ def dashboard(request):
         'clocked_in': request.session['clocked_in'],
         'new_tabs' : new_tabs,
     }
-    # print("inside dashboard. context: ",context)
-    print("Tab 1 price of drink 1 : ", Tab.objects.all())
-    test_price = 12
-    print("integer of test_price: ",test_price)
-    test_price_float = float(test_price)
-    print("float of test_price: ",test_price_float/100)
-    print(f'using f modifyer to format variable')
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
