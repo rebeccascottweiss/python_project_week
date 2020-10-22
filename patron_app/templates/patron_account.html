@@ -41,6 +41,13 @@
         <input type="submit" value="Update Info" class = "btn btn-primary">
         </div>
     </form>
+    {% if messages %}
+        <ul class='messages'>
+            {% for message in messages %}
+            <li class="{{message.tags}}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     <div>
         <h3>Account History</h3>
         <h4>Your Tabs</h4>
