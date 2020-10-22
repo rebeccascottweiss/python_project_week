@@ -82,7 +82,7 @@ def dashboard(request):
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
-if 'employee_id' not in request.session:
+    if 'employee_id' not in request.session:
         return redirect('/bar')
     this_tab = Tab.objects.get(id=tab_id)
     this_tab.payment_reference = "123456789"
