@@ -56,6 +56,8 @@ def login(request):
     return redirect('/')
 
 def update_info(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     current_patron = Patron.objects.get(id=request.session['patron_id'])
     # Need to add a new validation field for updating
     current_patron.first_name = request.POST['first_name']
@@ -67,6 +69,8 @@ def update_info(request):
 def start_tab(request):
     # check if patron has payment applications linked?
     # if patron payment send to current tab page
+    if 'patron_id' not in request.session:
+        return redirect('/')
     start=stripe_start()
     print(start)
     request.session['start'] = start
@@ -84,6 +88,8 @@ def start_tab(request):
     return redirect('/patron_tab')
 
 def add_payment(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     # add T/F for if payment information is successful
     request.session['payment_info_collected'] = True
     #make an instance of a tab for our patron
@@ -93,6 +99,8 @@ def add_payment(request):
     return redirect('/patron_tab')
 
 def patron_tab(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     patron = Patron.objects.get(id=request.session['patron_id'])
     # make a total in session to allow for better transfer of data on the backend?
     current_tab = patron.tabs.last()
@@ -109,11 +117,15 @@ def patron_tab(request):
 
 #should this come after selecting tip?
 def pay_tab(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     #process payment info
     #print(stripe_trial)
     return redirect('/tab_receipt')
 
 def tab_receipt(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     context = {
         'patron': Patron.objects.get(id=request.session['patron_id']),
     }
@@ -122,15 +134,21 @@ def tab_receipt(request):
     return render(request, 'patron_tab_receipt.html', context)
 
 def account(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     context = {
         'patron': Patron.objects.get(id=request.session['patron_id']),
     }
     return render(request, 'patron_account.html', context)
 
 def password_update(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     return render(request, 'password_update.html')
 
 def password_change(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     current_patron = Patron.objects.get(id=request.session['patron_id'])
     #input password verification
     
@@ -143,6 +161,8 @@ def password_change(request):
     return redirect('/patron/password_update')
 
 def tip_select(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     patron = Patron.objects.get(id=request.session['patron_id'])
     this_tab = patron.tabs.last()
     # print(request.POST)
@@ -155,6 +175,8 @@ def tip_select(request):
     return redirect('/tab_receipt')
 
 def return_home(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     if 'tip' in request.session:
         del request.session['tip']
     return redirect('/')
@@ -164,6 +186,8 @@ def logout(request):
     return redirect('/')
 
 def stripe_start():
+    if 'patron_id' not in request.session:
+        return redirect('/')
     return_val = stripe.PaymentIntent.create(
         amount=100,
         currency="usd",
@@ -172,6 +196,8 @@ def stripe_start():
     return return_val
 
 def card_wallet(request):
+    if 'patron_id' not in request.session:
+        return redirect('/')
     current_patron = Patron.objects.get(id=request.session['patron_id'])
     intent = stripe.SetupIntent.create(
     customer = current_patron.external_id
