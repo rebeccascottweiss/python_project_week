@@ -79,6 +79,15 @@ class Validation(models.Manager):
                 if patron.email_address == postData['email_address']:
                     errors['dup_email'] = "That email is already registered. Try logging in."
         return errors
+    
+    def validate_password_update(self, postData):
+        errors = {}
+        Password_REGEX = re.compile(r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.;:<>?/~_+-=\|])')
+        if not Password_REGEX.match(postData['password_new']):
+            errors['pw_chars'] = "Your password must contain: one lowercase letter, one uppercase letter, one number and one special character."
+        if postData['password_new'] != postData['password_new_conf']:
+            errors['match_pw'] = "Your passwords must match!"
+        return errors
 
 
     def validate_login(self, postData):

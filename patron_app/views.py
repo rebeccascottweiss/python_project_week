@@ -171,7 +171,11 @@ def password_change(request):
         return redirect('/')
     current_patron = Patron.objects.get(id=request.session['patron_id'])
     #input password verification
-    
+    errors = Patron.objects.validate_password_update(request.POST)
+    if len(errors) > 0:
+        for msg in errors.values():
+            messages.error(request, msg)
+        return redirect('/patron/password_update')
     if bcrypt.checkpw(request.POST['password_old'].encode(), current_patron.password.encode()) and request.POST['password_new'] == request.POST['password_new_conf']:
         current_patron.password = bcrypt.hashpw(request.POST['password_new'].encode(), bcrypt.gensalt()).decode()
         current_patron.save()
