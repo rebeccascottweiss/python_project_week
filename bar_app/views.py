@@ -16,7 +16,7 @@ def index(request):
 def register(request):
     print(request.POST['name'])
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+        return redirect('/bar/dashboard')
     errs = Employee.objects.employee_validator(request.POST)
     if len(errs) > 0:
         for msg in errs.values():
@@ -79,12 +79,15 @@ def dashboard(request):
         'clocked_in': request.session['clocked_in'],
         'new_tabs' : new_tabs,
     }
+    print(Tab.objects.exclude(payment_reference = "123456789"))
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
     if 'employee_id' not in request.session:
         return redirect('/bar')
+    bartender = Employee.objects.get(id=request.session['employee_id'])
     this_tab = Tab.objects.get(id=tab_id)
+    bartender.open_tabs.remove(this_tab)
     this_tab.payment_reference = "123456789"
     this_tab.save()
     print(this_tab.payment_reference)
@@ -93,7 +96,7 @@ def close_out(request, tab_id):
 
 def drinks(request):
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+        return redirect('/bar/dashboard')
     context = {
         'all_drinks' : Drink.objects.all()
     }
@@ -109,17 +112,17 @@ def employees(request):
 
 def addemployee(request):
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+        return redirect('/bar/dashboard')
     return render (request, 'addemployee.html')
 
 def adddrink(request):
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+        return redirect('/bar/dashboard')
     return render (request, 'adddrink.html')
 
 def newdrink(request):
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+        return redirect('/bar/dashboard')
     print(request.POST)
     drink = Drink.objects.create(
         name = request.POST['name'],
@@ -130,21 +133,21 @@ def newdrink(request):
 
 def removedrink(request,number):
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+        return redirect('/bar/dashboard')
     remove_drink = Drink.objects.get(id = number)
     remove_drink.delete()
     return redirect('/bar/drinks')
 
 def removeemployee(request,number):
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+        return redirect('/bar/dashboard')
     remove_employee = Employee.objects.get(id = number)
     remove_employee.delete()
     return redirect('/bar/employees')
 
 def edit_tab(request, tab_id):
-    if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
     context = {
         'bartender': Employee.objects.get(id = request.session['employee_id']),
         'all_employees': Employee.objects.all(),
@@ -157,7 +160,7 @@ def edit_tab(request, tab_id):
 
 def delete_drink(request, tab_id, drink_id):
     if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+        return redirect('/bar/dashboard')
     tab = Tab.objects.get(id=tab_id)
     drink = Drink.objects.get(id=drink_id)
     tab.drinks.remove(drink)
