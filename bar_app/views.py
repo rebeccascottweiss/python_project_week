@@ -72,7 +72,7 @@ def dashboard(request):
     clock_count = len(request.session['clocked_in'])
     for tab in Tab.objects.all():
         if not tab.bartender.all():
-            new_tabs.append(tab.id)        
+            new_tabs.append(tab.id)
     context = {
         'bartender': Employee.objects.get(id = request.session['employee_id']),
         'all_tabs': Tab.objects.exclude(payment_reference = "123456789"),

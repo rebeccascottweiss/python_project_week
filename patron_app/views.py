@@ -122,6 +122,8 @@ def patron_tab(request):
     patron = Patron.objects.get(id=request.session['patron_id'])
     # make a total in session to allow for better transfer of data on the backend?
     current_tab = patron.tabs.last()
+    if current_tab.payment_reference == "":
+        return redirect('/tab_receipt')
     context = {
         'patron': patron,
         'current_tab': current_tab,

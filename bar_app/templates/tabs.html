@@ -30,17 +30,19 @@
         </div><br>
         <div class="d-flex justify-content-between">
             <p class="text-dark">{{bartender.name}} is logged in</p>
-            <form action="switch_employee" method="post">
-                {%csrf_token%}
-                <select name="employee" id="employee">
-                    {%for employee in all_employees%}
-                    {%if employee.id in clocked_in and employee.id != bartender.id%}
-                    <option value="{{employee.id}}">{{employee.name}}</option>
-                    {%endif%}
-                    {%endfor%}
-                </select>
-                <input type="submit" value="Switch Bartender">
-            </form>
+            {% if clock_count > 1 %}
+                <form action="switch_employee" method="post">
+                    {%csrf_token%}
+                    <select name="employee" id="employee">
+                        {%for employee in all_employees%}
+                        {%if employee.id in clocked_in and employee.id != bartender.id%}
+                        <option value="{{employee.id}}">{{employee.name}}</option>
+                        {%endif%}
+                        {%endfor%}
+                    </select>
+                    <input type="submit" value="Switch Bartender">
+                </form>
+            {% endif %}
         </div>
     </header>
     <div class="d-inline-flex justify-content-start">
