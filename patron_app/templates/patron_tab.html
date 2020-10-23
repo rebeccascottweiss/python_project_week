@@ -20,25 +20,24 @@
 </head>
 
 <body>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-center">
         <h1 class="display-6">Hello {{patron.first_name}}!</h1>
-        <div class="p-2">
-            <a href="/patron/account" class="btn btn-secondary">Account</a>
-            <a href="/logout" class="btn btn-secondary">Logout</a></div>
     </div>
     <br>
     <br>
     <div class="justify-content-center">
-        <a href="/pay_tab" class="btn btn-secondary">Pay my tab</a>
         <br>
-            {% for drink in current_tab.drinks.all %}
-            <p>{{drink.name}} - {{drink.cost}}</p>
-            {% endfor %}
-            <!--Total for current tab-->
-            <p>Subtotal: {{current_tab.total}}</p>
+        <h6 class="text-center">This is your current Dojo tab:</h6>
+        {% for drink in current_tab.drinks.all %}
+        <p class="text-center">{{drink.name}} - {{drink.cost}}</p>
+        {% endfor %}
+        <!--Total for current tab-->
+        <h6 class="text-center">Subtotal: ${{current_tab.total}}</h6>
+        <a href="/pay_tab" class="btn btn-warning">Pay my tab</a>
     </div>
+    <a href="/return_home" class="btn btn-primary"> Return to home page </a><br>
     <script type="text/javascript">
-        setTimeout(function(){
+        setTimeout(function () {
             location.reload();
         }, 10000)
     </script>
