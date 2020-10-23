@@ -47,6 +47,21 @@
     <div class="d-inline-flex justify-content-center">
         <div class="sidebar-sticky pt-3">
             <ul class="nav flex-column">
+                <li class="nav-item"></li>
+                    {%if clock_count > 1 %}
+                    <form action="switch_employee" method="post">
+                        {%csrf_token%}
+                        <select name="employee" id="employee">
+                            {%for employee in all_employees%}
+                            {%if employee.id in clocked_in and employee.id != bartender.id%}
+                            <option value="{{employee.id}}">{{employee.name}}</option>
+                            {%endif%}
+                            {%endfor%}
+                        </select>
+                        <input type="submit" value="Switch Bartender">
+                    </form>
+                    {% endif %}
+                </li><br>
                 <h6 class='text-muted'>Employees</h6>
                 <li class="nav-item"><a href="/bar" class="nav-link active">Clock In</a> </li>
                 <li class="nav-item"><a href="/bar/cashout" class="nav-link active">Cashout</a></li>
@@ -66,15 +81,15 @@
                 {% if bartender.is_manager %}
                 {%for tab in all_tabs%}
                 <div class="p-2 bd-highlight">
-                    <h4>Tab #{{tab.id}} - {{tab.patron.first_name}} {{tab.patron.last_name}}</h4>
+                    <h4>#{{tab.id}} - {{tab.patron.first_name}} {{tab.patron.last_name}}</h4>
+                    <p>Bartender: {{tab.bartender.name}}</p>
                     <ul>
                         {%for drink in tab.line_items.all%}
                         <li>{{drink.name}} - ${{drink.cost|div:100|floatformat:2}}</li>
                         {%endfor%}
                     </ul>
-                    <p>Total = ${{tab.total}}</p>
+                    <p>Total = ${{tab.total|div:100|floatformat:2}}</p>
                     <a href="close_out/{{tab.id}}" class="button">Close Out |</a><a href="edit/{{tab.id}}"> Edit Tab</a>
-                    </li>
                 </div>
                 {%endfor%}
                 {%else%}
@@ -95,9 +110,8 @@
                         <li>{{drink.name}} - ${{drink.cost|div:100|floatformat:2}}</li>
                         {%endfor%}
                     </ul>
-                    <p>Total = ${{tab.total}}</p>
-                    <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}">Drop Tab
-                        |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
+                    <p>Total = ${{tab.total|div:100|floatformat:2}}</p>
+                    <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}">Drop Tab |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
                 </div>
                 {%endfor%}
             </div>
