@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0,, shrink-to-fit=no">
     {% load static %}
+    {% load mathfilters %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -31,11 +32,11 @@
     <div class="justify-content-center">
         <a href="/pay_tab" class="btn btn-secondary">Pay my tab</a>
         <br>
-            {% for drink in current_tab.drinks.all %}
-            <p>{{drink.name}} - {{drink.cost}}</p>
+            {% for drink in current_tab.line_items.all %}
+            <p>{{drink.name}} - {{drink.cost|div:100|floatformat:2}}</p>
             {% endfor %}
             <!--Total for current tab-->
-            <p>Subtotal: {{current_tab.total}}</p>
+            <p>Subtotal: {{current_tab.total|div:100|floatformat:2}}</p>
     </div>
     <script type="text/javascript">
         setTimeout(function(){

@@ -69,6 +69,7 @@ def dashboard(request):
     if 'employee_id' not in request.session:
         return redirect ('/bar')
     new_tabs = []
+    clock_count = len(request.session['clocked_in'])
     for tab in Tab.objects.all():
         if not tab.bartender.all():
             new_tabs.append(tab.id)        
@@ -77,12 +78,13 @@ def dashboard(request):
         'all_tabs': Tab.objects.exclude(payment_reference = "123456789"),
         'all_employees': Employee.objects.all(),
         'clocked_in': request.session['clocked_in'],
+        'clock_count': clock_count,
         'new_tabs' : new_tabs,
     }
     return render (request, 'dashboard.html', context)
 
 def close_out(request, tab_id):
-if 'employee_id' not in request.session:
+    if 'employee_id' not in request.session:
         return redirect('/bar')
     this_tab = Tab.objects.get(id=tab_id)
     this_tab.payment_reference = "123456789"
@@ -143,12 +145,14 @@ def removeemployee(request,number):
     return redirect('/bar/employees')
 
 def edit_tab(request, tab_id):
-    if Employee.objects.get(id=request.session['employee_id']).is_manager != True:
-        return redirect('/dashboard')
+    if 'employee_id' not in request.session:
+        return redirect('/bar')
+    clock_count = len(request.session['clocked_in'])
     context = {
         'bartender': Employee.objects.get(id = request.session['employee_id']),
         'all_employees': Employee.objects.all(),
         'clocked_in': request.session['clocked_in'],
+        'clock_count': clock_count,
         'tab': Tab.objects.get(id=tab_id),
         'drinks': Drink.objects.all(),
     }

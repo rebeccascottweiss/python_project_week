@@ -34,7 +34,8 @@
     <div class="d-inline-flex justify-content-start">
         <div class="sidebar-sticky pt-3">
             <ul class="nav flex-column">
-                <li class="nav-item">
+                <li class="nav-item"></li>
+                    {%if clock_count > 1 %}
                     <form action="switch_employee" method="post">
                         {%csrf_token%}
                         <select name="employee" id="employee">
@@ -46,6 +47,7 @@
                         </select>
                         <input type="submit" value="Switch Bartender">
                     </form>
+                    {% endif %}
                 </li><br>
                 <h6 class='text-muted'>Employees</h6>
                 <li class="nav-item"><a href="/bar" class="nav-link active">Clock In</a> </li>
@@ -68,12 +70,13 @@
             <div class="d-flex flex-row bd-highlight mb-3">
                 <div class="p-2 bd-highlight">
                     <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
+                    <p>Bartender: {{tab.bartender.name}}</p>
                     <ul>
                         {%for drink in tab.line_items.all%}
                         <li>{{drink.name}} - {{drink.cost|div:100|floatformat:2}}</li>
                         {%endfor%}
                     </ul>
-                    <p>Total = {{tab.total}}</p>
+                    <p>Total = {{tab.total|div:100|floatformat:2}}</p>
                     <a href="close_out/{{tab.id}}" class="button">Close Out |</a><a href="edit/{{tab.id}}"> Edit Tab</a></li>
                 </div>
             {%endfor%}
@@ -94,7 +97,7 @@
                         <li>{{drink.name}} - {{drink.cost|div:100|floatformat:2}}</li>
                         {%endfor%}
                     </ul>
-                    <p>Total = {{tab.total}}</p>
+                    <p>Total = {{tab.total|div:100|floatformat:2}}</p>
                     <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}">Drop Tab |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
                 </div>
             {%endfor%}
