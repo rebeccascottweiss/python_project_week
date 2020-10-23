@@ -20,16 +20,17 @@
     </script>
     <title>Bartender Dashboard</title>
 </head>
+
 <body class="p-3 mb-2 bg-light text-dark">
     <header>
-    <div class="d-flex justify-content-between">
-        <h1 class="display-4">Welcome!</h1>
-        <div class="p-2"><a href="/bar/dashboard">Go Back</a>
-            <a href="/bar/logout">Log Out</a></div>
-    </div>
-    <div class="d-flex justify-content-end">
-        <p>{{bartender.name}} is logged in</p>
-    </div>
+        <div class="d-flex justify-content-between">
+            <h1 class="display-4">Welcome!</h1>
+            <div class="p-2"><a href="/bar/dashboard">Go Back</a>
+                <a href="/bar/logout">Log Out</a></div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <p>{{bartender.name}} is logged in</p>
+        </div>
     </header>
     <div class="d-inline-flex justify-content-start">
         <div class="sidebar-sticky pt-3">
@@ -63,7 +64,7 @@
         </div>
         <div class="d-flex flex-column justify-content-center">
             <h4 class="d-flex justify-content-center">Active / Open Tabs</h4>
-        {% if bartender.is_manager %}
+            {% if bartender.is_manager %}
             {%for tab in all_tabs%}
             <div class="d-flex flex-row bd-highlight mb-3">
                 <div class="p-2 bd-highlight">
@@ -74,20 +75,21 @@
                         {%endfor%}
                     </ul>
                     <p>Total = {{tab.total}}</p>
-                    <a href="close_out/{{tab.id}}" class="button">Close Out |</a><a href="edit/{{tab.id}}"> Edit Tab</a></li>
+                    <a href="close_out/{{tab.id}}" class="button">Close Out |</a><a href="edit/{{tab.id}}"> Edit Tab</a>
+                    </li>
                 </div>
-            {%endfor%}
-        {%else%}
-            {%for tab in all_tabs%}
-            {%if tab.id in new_tabs%}
+                {%endfor%}
+                {%else%}
+                {%for tab in all_tabs%}
+                {%if tab.id in new_tabs%}
                 <div class="d-flex flex-row bd-highlight mb-3">
                     <h3>New Tab!</h3>
                     <a href="pick_up/{{tab.id}}">Pick it Up</a>
                 </div>
-            {%endif%}
-            {%endfor%}
-            {%for tab in bartender.open_tabs.all%}
-                <div class="table">
+                {%endif%}
+                {%endfor%}
+                {%for tab in bartender.open_tabs.all%}
+                <div class="p-2 bd-highlight">
                     <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
                     <ul>
                         {%for drink in tab.line_items.all%}
@@ -95,16 +97,17 @@
                         {%endfor%}
                     </ul>
                     <p>Total = {{tab.total}}</p>
-                    <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}">Drop Tab |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
+                    <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}">Drop Tab
+                        |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
                 </div>
-            {%endfor%}
+                {%endfor%}
             </div>
         </div>
 
         {%endif%}
-        </div>
     </div>
-        
+    </div>
+
 </body>
 
 </html>

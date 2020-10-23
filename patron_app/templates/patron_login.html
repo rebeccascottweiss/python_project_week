@@ -61,13 +61,13 @@
     <div class="d-flex justify-content-center">
         <h2>Login</h2>
     </div>
-    <!-- {% if messages %}
+    {% if messages %}
             <ul class='messages'>
                 {% for message in messages %}
                     <li class="{{message.tags}}">{{ message }} {{message.key}}</li>
                 {% endfor %}
             </ul>
-            {% endif %} -->
+            {% endif %}
     <div class="d-flex justify-content-center">
         <form action="/login" method="POST">
             {% csrf_token %}
