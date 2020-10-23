@@ -91,6 +91,7 @@
                 {%endif%}
                 {%endfor%}
                 {%for tab in bartender.open_tabs.all%}
+                {% if tab in all_tabs %}
                 <div class="p-2 bd-highlight">
                     <h4>{{tab.id}} - {{tab.patron.first_name}} {{tab.patron.last_name}}</h4>
                     <ul>
@@ -101,6 +102,7 @@
                     <p>Total = ${{tab.total|div:100|floatformat:2}}</p>
                     <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}"> Drop Tab |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
                 </div>
+                {% endif %}
                 {%endfor%}
             </div>
         </div>
