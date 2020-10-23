@@ -62,25 +62,30 @@
             </ul>
             {%endif%}
         </div>
-        <div class="tab">
-            <h2>Edit Tab #{{tab.id}}</h2>
-            <h5>Add Drink</h5>
-            <ul>
-                {%for drink in tab.line_items.all%}
-                <li>{{drink.name}} - ${{drink.cost|div:100|floatformat:2}}</li>
-                {%endfor%}
-            </ul>
-            <p>Total = ${{tab.total|div:100|floatformat:2}}</p>
-            </ul>
-            <form action="/bar/adddrink/{{tab.id}}" method="post">
-                {%csrf_token%}
-                <select name="drink" id="drink_menue">
-                    {%for drink in drinks%}
-                    <option value="{{drink.id}}">{{drink.name}}</option>
+        <div class="d-flex justify-content-between">
+            <div>
+                <h5>Add Drink</h5>
+                <div class="d-flex justify-content-between flex-wrap col-12 row-12">
+                    {% for drink in drinks %}
+                    <div class="d-flex col-4 row-3 flex-wrap">
+                        <form action="/bar/adddrink/{{tab.id}}" method="post">
+                            {%csrf_token%}
+                            <input type="hidden" name="drink" value="{{drink.id}}">
+                            <input type="submit" value="{{drink.name}}">
+                        </form>
+                    </div>
                     {%endfor%}
-                </select>
-                <input type="submit" value="Add Drink">
-            </form>
+                </div>
+            </div>
+            <div class="col-3">
+                <h2>Edit Tab #{{tab.id}}</h2>
+                <ul>
+                    {%for drink in tab.line_items.all%}
+                    <li>{{drink.name}} - ${{drink.cost|div:100|floatformat:2}}</li>
+                    {%endfor%}
+                </ul>
+                <p>Total = ${{tab.total|div:100|floatformat:2}}</p>
+            </div>
         </div>
 
 </body>

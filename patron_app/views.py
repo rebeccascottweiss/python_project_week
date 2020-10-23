@@ -145,9 +145,9 @@ def pay_tab(request):
 def tab_receipt(request):
     if 'patron_id' not in request.session:
         return redirect('/')
-
     context = {
         'patron': Patron.objects.get(id=request.session['patron_id']),
+        'current_tab': Patron.objects.get(id=request.session['patron_id']).tabs.last(),
     }
     if 'tip' not in request.session:
         return render(request, 'patron_tip.html', context)
