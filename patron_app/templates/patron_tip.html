@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0,, shrink-to-fit=no">
@@ -17,16 +18,14 @@
     </script>
     <title>BarTab</title>
 </head>
+
 <body class="p-3 mb-2 bg-light text-dark">
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-center">
         <h1 class="display-6">Hello {{patron.first_name}}!</h1>
-        <div class="p-2">
-            <a href="/patron/account" class="btn btn-secondary">Account</a>
-            <a href="/logout" class="btn btn-secondary">Logout</a></div>
     </div>
     <div>
-        <h5>Thank You!</h5>
-        <h5>Would you like to add a tip?</h5>
+        <h5 class="text-center">Thank You!</h5>
+        <h6 class="text-center">Would you like to add a tip?</h6>
         <form action="/tip_select" method="POST">
             {% csrf_token %}
             <input type="radio" id="zero" name="tip" value="0">
@@ -46,4 +45,5 @@
         <!-- Potential place for lyft/uber link -->
     </div>
 </body>
+
 </html>

@@ -123,11 +123,8 @@ def patron_tab(request):
     patron = Patron.objects.get(id=request.session['patron_id'])
     # make a total in session to allow for better transfer of data on the backend?
     current_tab = patron.tabs.last()
-    if len(current_tab.drinks.all()) > 0:
-        current_tab.total = 0
-        for drink in current_tab.drinks.all():
-            current_tab.total += drink.cost
-        current_tab.save()
+    if len(current_tab.payment_reference) > 0:
+        return redirect("/pay_tab")
     context = {
         'patron': patron,
         'current_tab': current_tab,
@@ -148,6 +145,7 @@ def pay_tab(request):
 def tab_receipt(request):
     if 'patron_id' not in request.session:
         return redirect('/')
+
     context = {
         'patron': Patron.objects.get(id=request.session['patron_id']),
     }
@@ -193,12 +191,15 @@ def tip_select(request):
     patron = Patron.objects.get(id=request.session['patron_id'])
     this_tab = patron.tabs.last()
     # print(request.POST)
-    print(int(request.POST['tip']))
-    this_tab.total = 1
-    this_tab.save()
     print(this_tab.total)
-    patron.tabs.last().total += patron.tabs.last().total * \
-        int(request.POST['tip']) / 100
+    print(request.POST['other_tip'])
+    if request.POST['other_tip'] == "":
+        this_tab.total += this_tab.total * int(request.POST['tip']) / 100
+        this_tab.save()
+    else:
+        this_tab.total += this_tab.total * int(request.POST['other_tip']) / 100
+        this_tab.save()
+    print(f"after tip: {this_tab.total}")
     request.session['tip'] = True
     return redirect('/tab_receipt')
 

@@ -20,25 +20,21 @@
 </head>
 
 <body>
-    <div class="d-flex justify-content-between">
-        <h1 class="display-6">Hello {{patron.first_name}}!</h1>
-        <div class="p-2">
-            <a href="/patron/account" class="btn btn-secondary">Account</a>
-            <a href="/logout" class="btn btn-secondary">Logout</a></div>
+    <div class="d-flex justify-content-center">
+        <h1 class="display-6 text-center">Hello {{patron.first_name}}!</h1>
     </div>
     <br>
     <div class="justify-content-center">
         <!--links to PayPal, GooglePay, ApplePay-->
-        <p>Please add a payment method</p><br>
+        <p class="text-center">Please add a payment method</p>
     </div>
-    <label for="card_name">Cardholder Name:</label>
-    <input id="cardholder-name" type="text">
+    <input id="cardholder-name" type="text" placeholder="Cardholder Name"><br>
     <!-- placeholder for Elements -->
     <!-- changing setup-form to payment-form -->
     <form id="payment-form" data-secret="{{ clientSecret }}">
         <div id="card-element"></div>
         <div id="card-errors" role="alert"></div>
-        <button id="card-button">
+        <button id="card-button text-center">
             Save Card
         </button>
         <input type="submit" class="submit" value="Submit Payment">
@@ -46,6 +42,27 @@
         <div></div>
         <a href="/add_payment" class="btn btn-primary">Continue</a>
     </form>
+
+
+
+    <br></br><br><br>
+    <div class="d-flex align-items-end">
+        <a href="/return_home" class="btn btn-danger"> Return to home page </a><br>
+    <!-- <form action="/charge" method="post" id="payment-form">
+        <div class="form-row">
+            <label for="card-element">
+                Credit or debit card
+            </label>
+            <div id="card-element">
+<! A Stripe Element will be inserted here. -->
+    <!-- </div> -->
+
+    <!-- Used to display form errors. -->
+    <!-- <div id="card-errors" role="alert"></div>
+        </div> -->
+
+    <!-- <button>Submit Payment</button> -->
+    <!-- </form> -->
 
     <script src="https://js.stripe.com/v3/"></script>
     <script src="{% static 'js/client.js'%} "></script>
