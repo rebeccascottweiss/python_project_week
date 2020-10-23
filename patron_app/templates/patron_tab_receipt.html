@@ -23,8 +23,6 @@
 <body class="p-3 mb-2 bg-light text-dark">
     <div class="d-flex justify-content-center">
         <h1 class="display-6">Hello {{patron.first_name}}!</h1><br><br><br>
-
-
     </div>
     <h4 class="text-center">Your payment for ${{patron.tabs.last.total|div:100|floatformat:2}} has processed</h4>
     <h4 class="text-center">Thank you!</h4><br>
