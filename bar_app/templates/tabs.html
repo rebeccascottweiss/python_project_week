@@ -22,16 +22,27 @@
 </head>
 
 <body class="p-3 mb-2 bg-light text-dark">
-
-    <div class="d-flex justify-content-between">
-        <h1 class="display-4">Welcome!</h1>
-        <div class="p-2"><a href="/bar/dashboard">Go Back</a>
-            <a href="/bar/logout">Log Out</a></div>
-    </div>
+    <header class="p-3 mb-2 bg-warning text-dark">
+        <div class="d-flex justify-content-between">
+            <h1 class="display-4">Welcome!</h1>
+            <div class="p-2 text-light"><a href="/bar/dashboard">Go Back</a>
+                <a href="/bar/logout">Log Out</a></div>
+        </div><br>
+        <div class="d-flex justify-content-between">
+            <p class="text-dark">{{bartender.name}} is logged in</p>
+            <form action="switch_employee" method="post">
+                {%csrf_token%}
+                <select name="employee" id="employee">
+                    {%for employee in all_employees%}
+                    {%if employee.id in clocked_in and employee.id != bartender.id%}
+                    <option value="{{employee.id}}">{{employee.name}}</option>
+                    {%endif%}
+                    {%endfor%}
+                </select>
+                <input type="submit" value="Switch Bartender">
+            </form>
+        </div>
     </header>
-    <div class="d-flex justify-content-end">
-        <p>{{bartender.name}} is logged in</p>
-    </div>
     <div class="d-inline-flex justify-content-start">
         <div class="sidebar-sticky pt-3">
             <ul class="nav flex-column">
@@ -68,13 +79,13 @@
             <h2>Edit Tab #{{tab.id}}</h2>
             <h5>Add Drink</h5>
             <ul>
-            {%for drink in tab.line_items.all%}
-                <li>{{drink.name}} - {{drink.cost|div:100|floatformat:2}}</li>
-            {%endfor%}
+                {%for drink in tab.line_items.all%}
+                <li>{{drink.name}} - ${{drink.cost|div:100|floatformat:2}}</li>
+                {%endfor%}
             </ul>
-            <p>Total = {{tab.total|div:100|floatformat:2}}</p>
+            <p>Total = ${{tab.total|div:100|floatformat:2}}</p>
             </ul>
-            <form action="/bar/adddrink/{{tab.id}}" method="post">
+            <form action="/bar/adddrink/{{tab.id}}" method="post" >
                 {%csrf_token%}
                 <select name="drink" id="drink_menue">
                     {%for drink in drinks%}

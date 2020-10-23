@@ -29,27 +29,23 @@
     <div class="d-flex justify-content-center">
         <form action="/register" method="POST" class="form-group">
             {% csrf_token %}
-            <label for="first_name">First Name:</label>
-            <input type="text" class="form-control" name="first_name" id="first_name">
+            <input type="text" class="form-control" name="first_name" id="first_name" placeholder = "First Name"> 
             <div>
-                <label for="last_name">Last Name:</label>
-                <input type="text" class="form-control" name="last_name" id="last_name">
+                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name">
             </div>
             <div>
+                <input type="text" class="form-control" name="email_address" id="email_address" placeholder="Email Address">
+            </div>
+            <div>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+            </div>
+            <div>
+                <input type="password" class="form-control" name="confirm_pw" id="confirm_pw" placeholder="Confirm Password">
+            </div>
+            <div>
+                <br>
                 <label for="birthday">Birthday</label>
                 <input type="date" name="birthday" id="birthday">
-            </div>
-            <div>
-                <label for="email_address">Email:</label>
-                <input type="text" class="form-control" name="email_address" id="email_address">
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" name="password" id="password">
-            </div>
-            <div>
-                <label for="confirm_pw">Confirm PW:</label>
-                <input type="password" class="form-control" name="confirm_pw" id="confirm_pw">
             </div>
             <div>
                 <input type="submit" class="btn btn-primary btn-lg btn-block" value="Register">
@@ -61,20 +57,18 @@
     <div class="d-flex justify-content-center">
         <h2>Login</h2>
     </div>
-    <!-- {% if messages %}
+    {% if messages %}
             <ul class='messages'>
                 {% for message in messages %}
                     <li class="{{message.tags}}">{{ message }} {{message.key}}</li>
                 {% endfor %}
             </ul>
-            {% endif %} -->
+            {% endif %}
     <div class="d-flex justify-content-center">
         <form action="/login" method="POST">
             {% csrf_token %}
-            <label for="patron_email">Email</label>
-            <input type="text" class="form-control" name="patron_email" id="patron_email"><br>
-            <label for="patron_password">Password</label>
-            <input type="password" class="form-control" name="patron_password" id="patron_password"><br>
+            <input type="text" class="form-control" name="patron_email" id="patron_email" placeholder="Email">
+            <input type="password" class="form-control" name="patron_password" id="patron_password" placeholder="Password">
             <input type="submit" class="btn btn-primary btn-lg btn-block" value="Log In">
         </form>
         <!-- {% if messages %}

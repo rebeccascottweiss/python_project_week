@@ -20,18 +20,15 @@
 </head>
 
 <body class="p-3 mb-2 bg-light text-dark">
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-center">
         <h1 class="display-5">Welcome {{patron.first_name}}!</h1>
-        <div class="p-2">
-            <a href="/patron/account" class="btn btn-secondary">Account</a>
-            <a href="/logout" class="btn btn-secondary">Logout</a></div>
     </div>
     <br>
-    <br>
+    <div class="justify-content-center">
+        <p class = "text-center">Thank you for coming to the Dojo Bar!</p>
+        <p class = "text-center">Click Below to start a tab and your server will be right over.</p>
 
-        <p>Thank you for coming to the Dojo Bar!</p>
-        <p>Click Below to start a tab and your server will be right over.</p>
-        <a href="/start_tab" class="btn btn-success">Start a Tab</a>
+        <a href="/start_tab" class="btn btn-success text-center">Start a Tab</a></div>
         <br>
         <br>
 
@@ -42,6 +39,9 @@
         <p>Tab #{{tab.id}}</p>
         {% endfor %}
     </div>
+    <div class="justify-content-start">
+        <a href="/patron/account" class="btn btn-secondary">Account</a><br><br>
+        <a href="/logout" class="btn btn-secondary">Logout</a></div>
 </body>
 
 </html>
