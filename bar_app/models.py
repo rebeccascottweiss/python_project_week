@@ -53,7 +53,7 @@ class Tab(models.Model):
     patron = models.ForeignKey(Patron, related_name='tabs', on_delete=models.CASCADE)
     bartender = models.ManyToManyField(Employee, related_name='open_tabs')
     drinks = models.ManyToManyField(Drink, related_name='patron_tabs')
-    payment_reference = models.CharField(max_length=500, null=True)
+    payment_reference = models.CharField(max_length=500, default = "")
     total = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
