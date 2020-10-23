@@ -72,7 +72,12 @@ function stripeTokenHandler(token) {
 
 var cardholderName = document.getElementById('cardholder-name');
 var cardButton = document.getElementById('card-button');
-var clientSecret = cardButton.dataset.secret;
+var test = document.getElementById('payment-form')
+console.log("test:")
+console.log(test.dataset.secret)
+console.log("card Button:")
+console.log(cardButton)
+var clientSecret = test.dataset.secret;
 
 cardButton.addEventListener('click', function(ev) {
 
@@ -80,7 +85,7 @@ cardButton.addEventListener('click', function(ev) {
     clientSecret,
     {
       payment_method: {
-        card: cardElement,
+        card: card,
         billing_details: {
           name: cardholderName.value,
         },
