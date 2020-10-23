@@ -1,5 +1,5 @@
 // Create a Stripe client.
-var stripe =Stripe('pk_test_51HelbYCqbNBsYI2Peh9TrdXZBlK8CufKVsiUJm7R0QkX4DivXXHjTBbcYuYJNADQGxEcOboEyYONzUskUYQhF5ON00WgGwm4KK')
+var stripe =Stripe('pk_test_51HfHFiJs7YlP147GqPlaz1osykHyXzGJVpQYOxUXsSUulkaQSEi9qdygTuO3iVNk1nHiRMyAoou8hT8qJ983d826009LGHzRwe')
 
 
 // Create an instance of Elements.
@@ -88,9 +88,9 @@ cardButton.addEventListener('click', function(ev) {
     }
   ).then(function(result) {
     if (result.error) {
-      // Display error.message in your UI.
+      console.log("Card Setup Failed")
     } else {
-      // The setup has succeeded. Display a success message.
+      console.log("Card Setup SUCCESS")
     }
   });
 });
