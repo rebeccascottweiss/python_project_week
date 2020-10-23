@@ -190,16 +190,20 @@ def tip_select(request):
         return redirect('/')
     patron = Patron.objects.get(id=request.session['patron_id'])
     this_tab = patron.tabs.last()
+    stripe_customer_id = patron.external_id
     # print(request.POST)
     print(this_tab.total)
     print(request.POST['other_tip'])
+    #refactor to make other_tip to tip and use radio buttons
     if request.POST['other_tip'] == "":
-        this_tab.total += this_tab.total * int(request.POST['tip']) / 100
+        this_tab.total = round(this_tab.total * (1 + int(request.POST['tip'])/100))
         this_tab.save()
     else:
-        this_tab.total += this_tab.total * int(request.POST['other_tip']) / 100
+        this_tab.total = round(this_tab.total * (1 + int(request.POST['other_tip']) / 100))
         this_tab.save()
     print(f"after tip: {this_tab.total}")
+    pm_id = stripe_payment_method(stripe_customer_id)
+    payment_confirmation = stripe_payment(stripe_customer_id, pm_id, this_tab.total)
     request.session['tip'] = True
     return redirect('/tab_receipt')
 
@@ -243,12 +247,31 @@ def stripe_start(stripe_customer_id):
     print("leaving Stripe start")
     return return_val.client_secret
 
-# needs to be completly thought thru NSB
-def stripe_payment():
-    return_val = stripe.PaymentIntent.create(
-        amount=100,
-        currency="usd",
-        payment_method_types=["card"],
+def stripe_payment_method(stripe_customer_id):
+    pm_list = stripe.PaymentMethod.list(
+        customer=stripe_customer_id,
+        type="card",
     )
+    print(f"stripe_payment_method is running: {pm_list.data[0].id}")
+    return pm_list.data[0].id
+
+# needs to be completly thought thru NSB
+def stripe_payment(customer_id, pm_id, total):
+    try:
+        return_val = stripe.PaymentIntent.create(
+            amount=total,
+            currency="usd",
+            customer=customer_id,
+            payment_method=pm_id,
+            #payment_method_types=["card"],
+            off_session=True,
+            confirm=True,
+        )
+        print("")
+    except stripe.error.CardError as e:
+        err = e.error
+        print("Code is: %s" % err.code)
+        payment_intent_id = err.payment_intent['id']
+        payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
     print("stripe_start (stripe.PaymentIntent.create) return value: ", return_val)
     return return_val
