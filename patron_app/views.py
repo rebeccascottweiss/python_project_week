@@ -4,11 +4,10 @@ from .models import Patron
 from bar_app.models import Tab
 import bcrypt
 import stripe
-stripe.api_key = "sk_test_51HelbYCqbNBsYI2PjoCLV5k87aa7nANj60JnnW9YN0Vpmcgpp7xNT261QkthAKkANXigqE2En5wWc70yHAG7DU8p00qr2fmI1Q"
+stripe.api_key = "sk_test_51HfHFiJs7YlP147G1rg96ffuvMG5hXYqZHU0hzuYWL2jbL3IjYmbGvxOoKhVoUElXz8CD7GvhkvV6pQn8iAs0H7z00NMXmpSh3"
 
 
-def setup_stripe_customer():
-    return stripe.Customer.create()
+
 
 # Create your views here.
 
@@ -29,9 +28,9 @@ def register(request):
             messages.error(request, msg)
         return redirect('/')
 
-    stripe_customer = setup_stripe_customer()
-    # print("This is the stripe customre: ",stripe_customer)
-    # print("this is the stripe customr_id: ", stripe_customer['id'])
+    stripe_customer = setup_stripe_customer(request.POST['first_name'], request.POST['last_name'], request.POST['email_address'])
+    print("This is the stripe customre: ",stripe_customer)
+    print("this is the stripe customr_id: ", stripe_customer['id'])
 
     current_patron = Patron.objects.create(
         first_name = request.POST['first_name'],
@@ -85,17 +84,19 @@ def start_tab(request):
     # if patron payment send to current tab page
     if 'patron_id' not in request.session:
         return redirect('/')
-    start=stripe_start()
-    print(start)
-    request.session['start'] = start
-    print(request.session['start'])
+    current_patron = Patron.objects.get(id=request.session['patron_id']) 
+    stripe_client_secret = stripe_start(current_patron.external_id)
+    # not sure we need this in session. the secret changes every time you call it and it may be short lived. Also not sure what we use it for except to register a card.
+    request.session['stripe_client_secret'] = stripe_client_secret
+    print("inside start_tab stripe_client_secret: ",request.session['stripe_client_secret'])
     # because it is a class instance we can just do .id
-    print(request.session['start'].id)
+    # print(request.session['start'].id)
     # determine what to do with payment id
     #when stripe is implemented this can be changed to: if Patron.objects.get(id=request.session).external_id = "": 
     if 'payment_info_collected' not in request.session:
         context = {
-            'patron': Patron.objects.get(id=request.session['patron_id'])
+            'patron': Patron.objects.get(id=request.session['patron_id']),
+            'clientSecret' : stripe_client_secret
         }
         return render(request, 'payment_info.html', context)
     Tab.objects.create(
@@ -122,11 +123,8 @@ def patron_tab(request):
     patron = Patron.objects.get(id=request.session['patron_id'])
     # make a total in session to allow for better transfer of data on the backend?
     current_tab = patron.tabs.last()
-    if len(current_tab.drinks.all()) > 0:
-        current_tab.total = 0
-        for drink in current_tab.drinks.all():
-            current_tab.total += drink.cost
-        current_tab.save()
+    if len(current_tab.payment_reference) > 0:
+        return redirect("/pay_tab")
     context = {
         'patron': patron,
         'current_tab': current_tab,
@@ -149,6 +147,7 @@ def tab_receipt(request):
         return redirect('/')
     context = {
         'patron': Patron.objects.get(id=request.session['patron_id']),
+        'current_tab': Patron.objects.get(id=request.session['patron_id']).tabs.last(),
     }
     if 'tip' not in request.session:
         return render(request, 'patron_tip.html', context)
@@ -166,6 +165,9 @@ def account(request):
 def password_update(request):
     if 'patron_id' not in request.session:
         return redirect('/')
+    context = {
+        'patron': Patron.objects.get(id=request.session['patron_id'])
+    }
     return render(request, 'password_update.html')
 
 def password_change(request):
@@ -191,13 +193,20 @@ def tip_select(request):
         return redirect('/')
     patron = Patron.objects.get(id=request.session['patron_id'])
     this_tab = patron.tabs.last()
+    stripe_customer_id = patron.external_id
     # print(request.POST)
-    print(int(request.POST['tip']))
-    this_tab.total = 1
-    this_tab.save()
     print(this_tab.total)
-    patron.tabs.last().total += patron.tabs.last().total * \
-        int(request.POST['tip']) / 100
+    print(request.POST['other_tip'])
+    #refactor to make other_tip to tip and use radio buttons
+    if request.POST['other_tip'] == "":
+        this_tab.total = round(this_tab.total * (1 + int(request.POST['tip'])/100))
+        this_tab.save()
+    else:
+        this_tab.total = round(this_tab.total * (1 + int(request.POST['other_tip']) / 100))
+        this_tab.save()
+    print(f"after tip: {this_tab.total}")
+    pm_id = stripe_payment_method(stripe_customer_id)
+    payment_confirmation = stripe_payment(stripe_customer_id, pm_id, this_tab.total)
     request.session['tip'] = True
     return redirect('/tab_receipt')
 
@@ -227,10 +236,45 @@ def card_wallet(request):
     return render(request, 'card_wallet.html', context)
 
 ############# Functions ##############
-def stripe_start():
-    return_val = stripe.PaymentIntent.create(
-        amount=100,
-        currency="usd",
-        payment_method_types=["card"],
+def setup_stripe_customer(first_name, last_name, email):
+    name = first_name + last_name
+    return_val = stripe.Customer.create(name=name, email=email)
+    return return_val
+
+def stripe_start(stripe_customer_id):
+    return_val = stripe.SetupIntent.create(
+        customer = stripe_customer_id
     )
+    # print("stripe_start (stripe.SetupIntent.create) return value: ", return_val)
+    print("stripe_start (stripe.SetupIntent.create) client_secret: ", return_val.client_secret)
+    print("leaving Stripe start")
+    return return_val.client_secret
+
+def stripe_payment_method(stripe_customer_id):
+    pm_list = stripe.PaymentMethod.list(
+        customer=stripe_customer_id,
+        type="card",
+    )
+    print(f"stripe_payment_method is running: {pm_list.data[0].id}")
+    return pm_list.data[0].id
+
+# needs to be completly thought thru NSB
+def stripe_payment(customer_id, pm_id, total):
+    try:
+        return_val = stripe.PaymentIntent.create(
+            amount=total,
+            currency="usd",
+            customer=customer_id,
+            payment_method=pm_id,
+            #payment_method_types=["card"],
+            off_session=True,
+            confirm=True,
+        )
+        print("")
+    except stripe.error.CardError as e:
+        err = e.error
+        print("Code is: %s" % err.code)
+        payment_intent_id = err.payment_intent['id']
+        payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+    print("stripe_start (stripe.PaymentIntent.create) return value: ", return_val)
     return return_val

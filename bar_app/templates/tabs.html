@@ -22,32 +22,32 @@
 </head>
 
 <body class="p-3 mb-2 bg-light text-dark">
-
-    <div class="d-flex justify-content-between">
-        <h1 class="display-4">Welcome!</h1>
-        <div class="p-2"><a href="/bar/dashboard">Go Back</a>
-            <a href="/bar/logout">Log Out</a></div>
-    </div>
+    <header class="p-3 mb-2 bg-info text-light">
+        <div class="d-flex justify-content-between">
+            <h1 class="display-4">Welcome!</h1>
+            <div class="p-2 text-light"><a href="/bar/dashboard" class = "text-light">Go Back</a>
+                <a href="/bar/logout" class = "text-light">Log Out</a></div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <p class="text-light">{{bartender.name}} is logged in</p>
+            <!-- {% if clock_count > 1 %}
+            <form action="switch_employee" method="post">
+                {%csrf_token%}
+                <select name="employee" id="employee">
+                    {%for employee in all_employees%}
+                    {%if employee.id in clocked_in and employee.id != bartender.id%}
+                    <option value="{{employee.id}}">{{employee.name}}</option>
+                    {%endif%}
+                    {%endfor%}
+                </select>
+                <input type="submit" value="Switch Bartender">
+            </form>
+            {% endif %} -->
+        </div>
     </header>
-    <div class="d-flex justify-content-end">
-        <p>{{bartender.name}} is logged in</p>
-    </div>
     <div class="d-inline-flex justify-content-start">
         <div class="sidebar-sticky pt-3">
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <form action="switch_employee" method="post">
-                        {%csrf_token%}
-                        <select name="employee" id="employee">
-                            {%for employee in all_employees%}
-                            {%if employee.id in clocked_in and employee.id != bartender.id%}
-                            <option value="{{employee.id}}">{{employee.name}}</option>
-                            {%endif%}
-                            {%endfor%}
-                        </select>
-                        <input type="submit" value="Switch Bartender">
-                    </form>
-                </li><br>
                 <h6 class='text-muted'>Employees</h6>
                 <li class="nav-item"><a href="/bar" class="nav-link active">Clock In</a> </li>
                 <li class="nav-item"><a href="" class="nav-link active">Schedule</a> </li>
@@ -57,30 +57,35 @@
             <h6 class='text-muted'>Managers Only</h6>
             <ul class="nav flex-column">
                 <li class="nav-item"></li>
-                <li class="nav-item"><a href="/bar/drinks" class="nav-link active">Drinks</a></li>
+                <li class="nav-item"><a href="/bar/drinks" class="nav-link active"> Drinks</a></li>
                 <li class="nav-item"><a href="/bar/employees" class="nav-link active">Employees</a></li>
             </ul>
             {%endif%}
         </div>
-        <div class="tab">
-            <h2>Edit Tab #{{tab.id}}</h2>
-            <h5>Add Drink</h5>
-            <ul>
-            {%for drink in tab.line_items.all%}
-                <li>{{drink.name}} - {{drink.cost|div:100|floatformat:2}}</li>
-            {%endfor%}
-            </ul>
-            <p>Total = {{tab.total}}</p>
-            </ul>
-            <form action="/bar/adddrink/{{tab.id}}" method="post">
-                {%csrf_token%}
-                <select name="drink" id="drink_menue">
-                    {%for drink in drinks%}
-                    <option value="{{drink.id}}">{{drink.name}}</option>
+        <div class="d-flex justify-content-between">
+            <div>
+                <h5>Add Drink</h5>
+                <div class="d-flex justify-content-between flex-wrap col-12 row-12">
+                    {% for drink in drinks %}
+                    <div class="d-flex col-4 row-3 flex-wrap">
+                        <form action="/bar/adddrink/{{tab.id}}" method="post">
+                            {%csrf_token%}
+                            <input type="hidden" name="drink" value="{{drink.id}}">
+                            <input type="submit" value="{{drink.name}}">
+                        </form>
+                    </div>
                     {%endfor%}
-                </select>
-                <input type="submit" value="Add Drink">
-            </form>
+                </div>
+            </div>
+            <div class="col-3">
+                <h2>Edit Tab #{{tab.id}}</h2>
+                <ul>
+                    {%for drink in tab.line_items.all%}
+                    <li>{{drink.name}} - ${{drink.cost|div:100|floatformat:2}}</li>
+                    {%endfor%}
+                </ul>
+                <p>Total = ${{tab.total|div:100|floatformat:2}}</p>
+            </div>
         </div>
 
 </body>

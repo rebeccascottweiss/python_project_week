@@ -22,35 +22,37 @@
 </head>
 
 <body class="p-3 mb-2 bg-light text-dark">
-    <header>
+    <header class="p-3 mb-2 bg-info text-light">
         <div class="d-flex justify-content-between">
             <h1 class="display-4">Welcome!</h1>
-            <div class="p-2"><a href="/bar/dashboard">Go Back</a>
-                <a href="/bar/logout">Log Out</a></div>
-        </div>
-        <div class="d-flex justify-content-end">
-            <p>{{bartender.name}} is logged in</p>
+            <div class="p-2 text-light">
+                <a href="/bar/dashboard"class="text-light">Go Back</a>
+                <a href="/bar/logout" class="text-light">Log Out</a></div>
+        </div><br>
+        <div class="d-flex justify-content-between">
+            <p class="text-light">{{bartender.name}} is logged in</p>
+            {%if clock_count > 1 %}
+            <form action="switch_employee" method="post">
+                {%csrf_token%}
+                <select name="employee" id="employee">
+                    {%for employee in all_employees%}
+                    {%if employee.id in clocked_in and employee.id != bartender.id%}
+                    <option value="{{employee.id}}">{{employee.name}}</option>
+                    {%endif%}
+                    {%endfor%}
+                </select>
+                <input type="submit" value="Switch Bartender">
+            </form>
+            {% endif %}
+
         </div>
     </header>
-    <div class="d-inline-flex justify-content-start">
+    <div class="d-inline-flex justify-content-center">
         <div class="sidebar-sticky pt-3">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <form action="switch_employee" method="post">
-                        {%csrf_token%}
-                        <select name="employee" id="employee">
-                            {%for employee in all_employees%}
-                            {%if employee.id in clocked_in and employee.id != bartender.id%}
-                            <option value="{{employee.id}}">{{employee.name}}</option>
-                            {%endif%}
-                            {%endfor%}
-                        </select>
-                        <input type="submit" value="Switch Bartender">
-                    </form>
-                </li><br>
                 <h6 class='text-muted'>Employees</h6>
                 <li class="nav-item"><a href="/bar" class="nav-link active">Clock In</a> </li>
-                <li class="nav-item"><a href="" class="nav-link active">Schedule</a> </li>
                 <li class="nav-item"><a href="/bar/cashout" class="nav-link active">Cashout</a></li>
             </ul>
             {%if bartender.is_manager%}
@@ -64,42 +66,43 @@
         </div>
         <div class="d-flex flex-column justify-content-center">
             <h4 class="d-flex justify-content-center">Active / Open Tabs</h4>
-            {% if bartender.is_manager %}
-            {%for tab in all_tabs%}
-            <div class="d-flex flex-row bd-highlight mb-3">
+            <div class="d-flex flex-wrap flex-row bd-highlight mb-3">
+                {% if bartender.is_manager %}
+                {%for tab in all_tabs%}
                 <div class="p-2 bd-highlight">
-                    <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
+                    <h4>{{tab.patron.first_name}} {{tab.patron.last_name}}</h4>
+                    <p>Bartender: {{tab.bartender.first.name}}</p>
                     <ul>
                         {%for drink in tab.line_items.all%}
-                        <li>{{drink.name}} - {{drink.cost|div:100|floatformat:2}}</li>
+                        <li>{{drink.name}} - ${{drink.cost|div:100|floatformat:2}}</li>
                         {%endfor%}
                     </ul>
-                    <p>Total = {{tab.total}}</p>
-                    <a href="close_out/{{tab.id}}" class="button">Close Out |</a><a href="edit/{{tab.id}}"> Edit Tab</a>
-                    </li>
+                    <p>Total = ${{tab.total|div:100|floatformat:2}} Tab#{{tab.id}} </p>
+                    <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="edit/{{tab.id}}"> Edit Tab</a>
                 </div>
                 {%endfor%}
                 {%else%}
                 {%for tab in all_tabs%}
                 {%if tab.id in new_tabs%}
-                <div class="d-flex flex-row bd-highlight mb-3">
+                <div class="p-2 bd-highlight">
                     <h3>New Tab!</h3>
                     <a href="pick_up/{{tab.id}}">Pick it Up</a>
                 </div>
                 {%endif%}
                 {%endfor%}
                 {%for tab in bartender.open_tabs.all%}
+                {% if tab in all_tabs %}
                 <div class="p-2 bd-highlight">
-                    <h3>{{tab.id}} - {{tab.patron.first_name}}</h3>
+                    <h4>{{tab.id}} - {{tab.patron.first_name}} {{tab.patron.last_name}}</h4>
                     <ul>
                         {%for drink in tab.line_items.all%}
-                        <li>{{drink.name}} - {{drink.cost|div:100|floatformat:2}}</li>
+                        <li>{{drink.name}} - ${{drink.cost|div:100|floatformat:2}}</li>
                         {%endfor%}
                     </ul>
-                    <p>Total = {{tab.total}}</p>
-                    <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}">Drop Tab
-                        |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
+                    <p>Total = ${{tab.total|div:100|floatformat:2}}</p>
+                    <a href="close_out/{{tab.id}}" class="button"> Close Out |</a><a href="drop/{{tab.id}}"> Drop Tab |</a><a href="edit/{{tab.id}}"> Add Drink</a></li>
                 </div>
+                {% endif %}
                 {%endfor%}
             </div>
         </div>
