@@ -165,6 +165,9 @@ def account(request):
 def password_update(request):
     if 'patron_id' not in request.session:
         return redirect('/')
+    context = {
+        'patron': Patron.objects.get(id=request.session['patron_id'])
+    }
     return render(request, 'password_update.html')
 
 def password_change(request):
