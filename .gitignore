@@ -12,3 +12,5 @@ stripe2.py
 
 get_charge_list.py
 
+.env
+
