@@ -1,14 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.conf import settings
 from .models import Patron
 from bar_app.models import Tab
 import bcrypt
 import stripe
-import os
-stripe.api_key = os.environ['stripe.api_key']
 
-
-
+stripe.api_key = settings.API_KEY
 
 # Create your views here.
 
