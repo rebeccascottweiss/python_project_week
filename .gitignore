@@ -9,6 +9,7 @@ patron_app/migrations
 
 strip_cust_create.py
 stripe2.py
+get_charge_list.py
 
 get_charge_list.py
 
