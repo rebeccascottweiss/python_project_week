@@ -21,8 +21,8 @@ Pay My Tab gives patrons the ability to open a tab, pay it in one financial tran
 <h2>DEMO</h2>
 
 <h3>Bar App</h3>
-<img src="" alt="Bar App Screen Demo"/>
+<img src="/images/payMyTabBarApp.gif" alt="Bar App Screen Demo"/>
 
 <h3>Patron App</h3>
-<img src="" alt="Patron App Screen Demo"/>
+<img src="/images/PayMyTabPatronApp.gif" alt="Patron App Screen Demo"/>
 
