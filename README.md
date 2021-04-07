@@ -3,6 +3,9 @@ I hate waking up in the morning after a night out and realizing that I left my c
 
 Pay My Tab gives patrons the ability to open a tab, pay it in one financial transaction, track their total, even leave a tip… all from the bar’s website.
 
+<h2>Update</h2>
+<p>This repo has been moved to a private repo for further work, please contact one of the <a href="#authors">authors</a> for further information.</p>
+
 <h2>FEATURES</h2>
 <ul>
   <li>Secure login and registration with validations</li>
@@ -12,7 +15,7 @@ Pay My Tab gives patrons the ability to open a tab, pay it in one financial tran
   <li>Tab can be closed out by patron or bartender</li>
 </ul>
 
-<h2>AUTHORS</h2>
+<h2 id="authors">AUTHORS</h2>
 <p>Nathaniel Burge - https://github.com/NathanielBurge</p>
 <p>Harold Danks - https://github.com/HBDanks</p>
 <p>Nathalie Souza - https://github.com/nathsouza</p>
